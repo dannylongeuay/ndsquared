@@ -1,0 +1,5 @@
+helm 3.7.1
+k3d 5.0.1
+kubectl 1.22.2
+poetry 1.1.11
+tilt 0.22.14
