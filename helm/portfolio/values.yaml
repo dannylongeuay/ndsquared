@@ -1,0 +1,38 @@
+deployment:
+  replicaCount: 1
+  image:
+    repository: hashicorp/http-echo
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
+  podAnnotations: {}
+  podSecurityContext:
+    fsGroup: 2000
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+  resources:
+    limits:
+      cpu: 1
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: localhost
+      paths:
+        - path: /
+          pathType: Prefix
+
+service:
+  port: 5000
+  type: "ClusterIP"

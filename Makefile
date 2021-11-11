@@ -17,16 +17,21 @@ asdf-bootstrap: ## Install all tools through asdf-vm
 .PHONY: k8s-bootstrap
 k8s-bootstrap: ## Create a Kubernetes cluster for local development
 	k3d registry create $(PROJECT_NAME).localhost --port=$(REGISTRY_PORT) || echo "Registry already exists"
-	k3d cluster create $(PROJECT_NAME) --registry-use k3d-$(PROJECT_NAME).localhost:$(REGISTRY_PORT) || echo "Cluster already exists"
+	k3d cluster create $(PROJECT_NAME) --registry-use k3d-$(PROJECT_NAME).localhost:$(REGISTRY_PORT) --no-lb || echo "Cluster already exists"
 
 .PHONY: helm-bootstrap
 helm-bootstrap: asdf-bootstrap k8s-bootstrap ## Update used helm repositories
 	helm repo add bitnami https://charts.bitnami.com/bitnami
-	helm repo add traefik https://helm.traefik.io/traefik
+	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 	helm repo update # Make sure that tilt can pull the latest helm chart versions
 
+.PHONY: kubectl-bootstrap
+kubectl-bootstrap: helm-bootstrap ## Update used helm repositories
+	kubectl create namespace ingress-nginx || true
+	kubectl create namespace ndsquared || true
+
 .PHONY: bootstrap
-bootstrap: asdf-bootstrap k8s-bootstrap helm-bootstrap ## Perform all bootstrapping to start your project
+bootstrap: asdf-bootstrap k8s-bootstrap helm-bootstrap kubectl-bootstrap ## Perform all bootstrapping to start your project
 
 .PHONY: clean
 clean: ## Delete local dev environment
@@ -35,7 +40,7 @@ clean: ## Delete local dev environment
 
 .PHONY: up
 up: bootstrap ## Run a local development environment
-	tilt up --context k3d-$(PROJECT_NAME) --hud --host "0.0.0.0"
+	tilt up --context k3d-$(PROJECT_NAME) --hud
 
 .PHONY: down
 down: ## Shutdown local development and free those resources
