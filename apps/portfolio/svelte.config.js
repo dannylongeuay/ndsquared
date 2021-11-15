@@ -14,7 +14,14 @@ const config = {
 	kit: {
 		adapter: node(),
 		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte'
+		target: '#svelte',
+		vite: {
+			server: {
+				hmr: {
+					port: 8000,
+				}
+			}
+		}
 	}
 };
 
