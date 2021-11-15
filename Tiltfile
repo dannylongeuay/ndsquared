@@ -56,4 +56,17 @@ k8s_resource(
   objects=[
     "dev-portfolio:ingress",
   ],
+  resource_deps=[
+    "dev-ingress-nginx",
+  ]
+)
+
+docker_build(
+  'portfolio-app',
+  './apps/portfolio/',
+  dockerfile='./apps/portfolio/Dockerfile',
+  entrypoint="npm run tilt",
+  live_update=[
+    sync('./apps/portfolio/', '/app')
+  ],
 )

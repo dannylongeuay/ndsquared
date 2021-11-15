@@ -1,20 +1,22 @@
 deployment:
   replicaCount: 1
   image:
-    repository: hashicorp/http-echo
+    repository: portfolio-app
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
   podAnnotations: {}
   podSecurityContext:
-    fsGroup: 2000
+    {}
+    # fsGroup: 2000
   securityContext:
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 1000
+    {}
+    # capabilities:
+    #   drop:
+    #     - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
   resources:
     limits:
       cpu: 1

@@ -23,14 +23,15 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           args:
-            - "-text=echo"
+            - "node"
+            - "build"
           securityContext:
             {{- toYaml .Values.deployment.securityContext | nindent 12 }}
           image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 5678
+              containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:
