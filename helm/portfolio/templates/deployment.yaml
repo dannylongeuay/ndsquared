@@ -18,15 +18,19 @@ spec:
       labels:
         {{- include "portfolio.selectorLabels" . | nindent 8 }}
     spec:
+      {{- if .Values.deployment.enableSecurityContext }}
       securityContext:
         {{- toYaml .Values.deployment.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           args:
             - "node"
             - "build"
+          {{- if .Values.deployment.enableSecurityContext }}
           securityContext:
             {{- toYaml .Values.deployment.securityContext | nindent 12 }}
+          {{- end }}
           image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           ports:

@@ -14,6 +14,9 @@ k8s_yaml(
     "helm/portfolio/",
     name="dev",
     namespace="ndsquared",
+    values=[
+      "helm/values.portfolio.local.yaml",
+    ],
   )
 )
 
@@ -64,7 +67,6 @@ k8s_resource(
 docker_build(
   'portfolio-app',
   './apps/portfolio/',
-  dockerfile='./apps/portfolio/Dockerfile',
   entrypoint="npm run tilt",
   live_update=[
     sync('./apps/portfolio/', '/app')
