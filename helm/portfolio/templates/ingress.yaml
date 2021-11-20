@@ -13,9 +13,9 @@ metadata:
 spec:
   tls:
     - hosts:
-    {{- range .Values.ingress.hosts }}
+      {{- range .Values.ingress.hosts }}
       - {{ .host }} 
-    {{- end}}
+      {{- end}}
       secretName: {{ $fullName }}-tls
   rules:
     {{- range .Values.ingress.hosts }}
