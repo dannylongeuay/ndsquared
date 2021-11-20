@@ -26,8 +26,13 @@ deployment:
 ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
     - host: ndsquared.net
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: www.ndsquared.net
       paths:
         - path: /
           pathType: Prefix
