@@ -3,7 +3,7 @@ deployment:
   replicaCount: 1
   image:
     repository: dannylongeuay/ndsq-portfolio
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
   podAnnotations: {}
