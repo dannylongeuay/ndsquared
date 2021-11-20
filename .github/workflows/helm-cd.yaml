@@ -1,0 +1,25 @@
+name: Helm CD
+on:
+  push:
+    branches:
+      - main
+jobs:
+  helmdeploy:
+    name: Helm Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ndsquared-prod-sf03
+      - uses: azure/setup-helm@v1
+        with:
+          version: v3.7.1
+      - uses: azure/setup-kubectl@v1
+        with:
+          version: v1.22.2
+      - run: helm upgrade portfolio helm/portfolio/ --install --namespace ndsq --create-namespace
+        name: Install helm chart
