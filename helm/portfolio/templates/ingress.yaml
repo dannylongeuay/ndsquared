@@ -11,12 +11,14 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.ingress.enableTls }}
   tls:
     - hosts:
       {{- range .Values.ingress.hosts }}
       - {{ .host }} 
       {{- end}}
       secretName: {{ $fullName }}-tls
+  {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}

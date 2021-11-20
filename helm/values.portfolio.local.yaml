@@ -1,8 +1,9 @@
 deployment:
+  enableSecurityContext: false
   image:
     repository: portfolio-app
-  enableSecurityContext: false
 ingress:
+  enableTls: false
   hosts:
     - host: localhost
       paths:

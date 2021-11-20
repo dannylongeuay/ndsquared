@@ -1,4 +1,5 @@
 deployment:
+  enableSecurityContext: true
   replicaCount: 1
   image:
     repository: dannylongeuay/ndsq-portfolio
@@ -24,6 +25,7 @@ deployment:
       memory: 128Mi
 
 ingress:
+  enableTls: true
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
