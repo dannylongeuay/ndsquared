@@ -1,2 +1,7 @@
 deployment:
+  image:
+    repository: portfolio-app
   enableSecurityContext: false
+ingress:
+  hosts:
+    - host: localhost
