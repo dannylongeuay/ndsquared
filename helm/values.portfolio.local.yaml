@@ -5,3 +5,6 @@ deployment:
 ingress:
   hosts:
     - host: localhost
+      paths:
+        - path: /
+          pathType: Prefix
