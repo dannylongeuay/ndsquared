@@ -1,20 +1,26 @@
 <script>
 	import '../app.css';
 	import NavLinks from '$lib/common/navLinks.svelte';
+	import ThemeSwitch from '$lib/common/themeSwitch.svelte';
+	import { onMount } from 'svelte';
+	import { themeChange } from 'theme-change';
 
-	export let sidebarOpen = false;
+	onMount(async () => {
+		themeChange(false);
+	});
+	let sidebarOpen = false;
 </script>
 
 <aside
 	class:translate-x-full={sidebarOpen}
-	class="absolute w-full h-full transition duration-500 ease-in-out transform -left-full bg-neutral-focus"
+	class="absolute z-10 w-full h-full transition duration-500 ease-in-out transform -left-full bg-neutral-focus"
 	on:click={() => (sidebarOpen = !sidebarOpen)}
 >
 	<div class="flex flex-col texl-xl text-neutral-content">
 		<NavLinks />
 	</div>
 </aside>
-<nav class="mb-2 shadow-lg navbar bg-neutral text-neutral-content">
+<nav class="flex mb-2 shadow-lg navbar bg-neutral text-neutral-content">
 	<div class="flex-none">
 		<button
 			class="z-20 btn btn-square btn-ghost lg:hidden"
@@ -35,13 +41,18 @@
 			</svg>
 		</button>
 	</div>
-	<div class="flex-none px-2 mx-2">
-		<a class="text-lg font-bold" href="/"> ND </a>
-	</div>
-	<div class="flex-1 hidden px-2 mx-2 lg:block">
-		<div class="items-stretch">
-			<NavLinks />
+	<div class="flex-1">
+		<div class="px-2 mx-2 flex-0">
+			<a class="text-lg font-bold" href="/"> ND </a>
 		</div>
+		<div class="flex-1 hidden px-2 mx-2 lg:block">
+			<div class="items-stretch">
+				<NavLinks />
+			</div>
+		</div>
+	</div>
+	<div class="flex-none">
+		<ThemeSwitch />
 	</div>
 </nav>
 <main class="h-screen">
