@@ -1,4 +1,4 @@
-name: Helm CI
+name: Portfolio CI
 on:
   - pull_request
 jobs:
