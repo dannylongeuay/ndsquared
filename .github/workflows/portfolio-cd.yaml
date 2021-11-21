@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           workdir: apps/portfolio/
-          tags: "latest,prod-${GITHUB_SHA}"
+          tags: "latest,prod-${{ GITHUB_SHA }}"
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -29,5 +29,5 @@ jobs:
       - uses: azure/setup-kubectl@v1
         with:
           version: v1.22.2
-      - run: helm upgrade portfolio helm/portfolio/ --install --namespace ndsq --create-namespace --set deployment.image.tag=prod-${GITHUB_SHA}
+      - run: helm upgrade portfolio helm/portfolio/ --install --namespace ndsq --create-namespace --set deployment.image.tag=prod-${{ GITHUB_SHA }}
         name: Install helm chart
