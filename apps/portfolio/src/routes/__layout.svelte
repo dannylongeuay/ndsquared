@@ -1,26 +1,30 @@
 <script>
 	import '../app.css';
+	import NavLinks from '$lib/common/navLinks.svelte';
+
+	export let sidebarOpen = false;
 </script>
 
-<div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content">
-	<div class="flex-none px-2 mx-2">
-		<a class="text-lg font-bold" href="/"> ND </a>
+<aside
+	class:translate-x-full={sidebarOpen}
+	class="absolute w-full h-full transition duration-500 ease-in-out transform -left-full bg-neutral-focus"
+	on:click={() => (sidebarOpen = !sidebarOpen)}
+>
+	<div class="flex flex-col texl-xl text-neutral-content">
+		<NavLinks />
 	</div>
-	<div class="flex-1 px-2 mx-2">
-		<div class="items-stretch">
-			<a class="btn btn-ghost btn-sm rounded-btn" href="/"> Home </a>
-			<a class="btn btn-ghost btn-sm rounded-btn" href="/portfolio"> Portfolio </a>
-			<a class="btn btn-ghost btn-sm rounded-btn" href="/about"> About </a>
-			<a class="btn btn-ghost btn-sm rounded-btn" href="/contact"> Contact </a>
-		</div>
-	</div>
+</aside>
+<nav class="mb-2 shadow-lg navbar bg-neutral text-neutral-content">
 	<div class="flex-none">
-		<button class="btn btn-square btn-ghost drawer-button">
+		<button
+			class="z-20 btn btn-square btn-ghost lg:hidden"
+			on:click={() => (sidebarOpen = !sidebarOpen)}
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
 				viewBox="0 0 24 24"
-				class="inline-block w-6 h-6 stroke-current"
+				class="inline-block w-10 h-10 stroke-current"
 			>
 				<path
 					stroke-linecap="round"
@@ -31,5 +35,20 @@
 			</svg>
 		</button>
 	</div>
-</div>
-<slot />
+	<div class="flex-none px-2 mx-2">
+		<a class="text-lg font-bold" href="/"> ND </a>
+	</div>
+	<div class="flex-1 hidden px-2 mx-2 lg:block">
+		<div class="items-stretch">
+			<NavLinks />
+		</div>
+	</div>
+</nav>
+<main class="h-screen">
+	<slot />
+</main>
+<footer class="flex justify-center w-full p-12 bg-neutral">
+	<span class="text-xl text-neutral-content">
+		Copyright &copy; 2021 NDSquared. All Rights Reserved
+	</span>
+</footer>
