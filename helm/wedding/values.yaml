@@ -2,7 +2,7 @@ deployment:
   enableSecurityContext: true
   replicaCount: 1
   image:
-    repository: dannylongeuay/ndsq-portfolio
+    repository: dannylongeuay/ndsq-wedding
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
@@ -34,11 +34,7 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: ndsquared.net
-      paths:
-        - path: /
-          pathType: Prefix
-    - host: www.ndsquared.net
+    - host: wedding.ndsquared.net
       paths:
         - path: /
           pathType: Prefix

@@ -1,11 +1,11 @@
-{{- $fullName := include "portfolio.fullname" . -}}
+{{- $fullName := include "wedding.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "portfolio.labels" . | nindent 4 }}
+    {{- include "wedding.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -15,8 +15,8 @@ spec:
   tls:
     - hosts:
       {{- range .Values.ingress.hosts }}
-      - {{ .host }} 
-      {{- end}}
+        - {{ .host }}
+      {{- end }}
       secretName: {{ $fullName }}-tls
   {{- end }}
   rules:
