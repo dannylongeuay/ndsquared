@@ -32,7 +32,7 @@ jobs:
           header: wedding-diff
           hide_and_recreate: true
           message: |
-            ## Helm Diff:
+            ## Helm `Wedding` Diff:
             ```
             ${{ env.COMMAND_OUTPUT }}
             ```
