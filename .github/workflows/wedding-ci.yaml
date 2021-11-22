@@ -29,7 +29,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: diff
+          header: wedding-diff
           hide_and_recreate: true
           message: |
             ## Helm Diff:
