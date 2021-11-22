@@ -24,6 +24,10 @@ deployment:
       cpu: 100m
       memory: 128Mi
 
+service:
+  type: ClusterIP
+  port: 5000
+
 ingress:
   enableTls: true
   annotations:
@@ -38,7 +42,3 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-
-service:
-  port: 5000
-  type: "ClusterIP"
