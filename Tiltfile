@@ -20,6 +20,17 @@ k8s_yaml(
   )
 )
 
+k8s_yaml(
+  helm(
+    "helm/wedding/",
+    name="dev",
+    namespace="ndsquared",
+    values=[
+      "helm/values.wedding.local.yaml",
+    ],
+  )
+)
+
 k8s_resource(
   "dev-ingress-nginx-controller",
   new_name="dev-ingress-nginx",
@@ -64,11 +75,32 @@ k8s_resource(
   ]
 )
 
+k8s_resource(
+  "dev-wedding",
+  links=["http://wedding.localhost:8000/"],
+  labels=["wedding"],
+  objects=[
+    "dev-wedding:ingress",
+  ],
+  resource_deps=[
+    "dev-ingress-nginx",
+  ]
+)
+
 docker_build(
   'portfolio-app',
   './apps/portfolio/',
   entrypoint="npm run tilt",
   live_update=[
     sync('./apps/portfolio/', '/app')
+  ],
+)
+
+docker_build(
+  'wedding-app',
+  './apps/wedding/',
+  entrypoint="npm run tilt",
+  live_update=[
+    sync('./apps/wedding/', '/app')
   ],
 )
