@@ -1,30 +1,36 @@
 <script>
 	import '../app.css';
+	import '../app.css';
 	import NavLinks from '$lib/common/navLinks.svelte';
-	import ThemeSwitch from '$lib/common/themeSwitch.svelte';
+	import ThemeSwitcher from '$lib/common/themeSwitcher.svelte';
 	import { onMount } from 'svelte';
 	import { themeChange } from 'theme-change';
 
 	onMount(async () => {
 		themeChange(false);
 	});
-	let sidebarOpen = false;
+	let mobileMenuOpen = false;
 </script>
 
+<svelte:head>
+	<title>NDSquared</title>
+</svelte:head>
+
 <aside
-	class:translate-x-full={sidebarOpen}
-	class="absolute z-10 w-full h-full transition duration-500 ease-in-out transform -left-full bg-neutral-focus"
-	on:click={() => (sidebarOpen = !sidebarOpen)}
+	class:translate-x-full={mobileMenuOpen}
+	class="absolute z-10 w-full h-full bg-neutral-focus transform transition duration-500 ease-in-out -left-full"
+	on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
 >
-	<div class="flex flex-col texl-xl text-neutral-content">
+	<div class="flex flex-col text-xl text-neutral-content">
 		<NavLinks />
 	</div>
 </aside>
-<nav class="flex mb-2 shadow-lg navbar bg-neutral text-neutral-content">
+
+<nav class="navbar bg-neutral text-neutral-content">
 	<div class="flex-none">
 		<button
 			class="z-20 btn btn-square btn-ghost lg:hidden"
-			on:click={() => (sidebarOpen = !sidebarOpen)}
+			on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -41,9 +47,9 @@
 			</svg>
 		</button>
 	</div>
-	<div class="flex-1">
-		<div class="px-2 mx-2 flex-0">
-			<a class="text-lg font-bold" href="/"> ND </a>
+	<div class="flex-1 items-center">
+		<div class="px-2 mx-2 flex-0 pb-2">
+			<a class="text-4xl font-bold text-primary" href="/"> Logo </a>
 		</div>
 		<div class="flex-1 hidden px-2 mx-2 lg:block">
 			<div class="items-stretch">
@@ -52,7 +58,7 @@
 		</div>
 	</div>
 	<div class="flex-none">
-		<ThemeSwitch />
+		<ThemeSwitcher />
 	</div>
 </nav>
 <main class="h-screen">

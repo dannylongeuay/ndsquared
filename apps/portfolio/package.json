@@ -1,9 +1,8 @@
 {
-	"name": "portfolio",
+	"name": "sveltekit-tailwindcss-daisyui-template",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"tilt": "svelte-kit dev --host",
 		"build": "svelte-kit build",
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -31,11 +30,9 @@
 		"svelte-check": "^2.2.6",
 		"svelte-preprocess": "^4.9.8",
 		"tailwindcss": "^2.2.16",
+		"theme-change": "^2.0.2",
 		"tslib": "^2.3.1",
 		"typescript": "^4.4.3"
 	},
-	"type": "module",
-	"dependencies": {
-		"theme-change": "^2.0.2"
-	}
+	"type": "module"
 }
