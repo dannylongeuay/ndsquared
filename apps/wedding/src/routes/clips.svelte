@@ -23,10 +23,10 @@
 		<div class="min-h-screen flex items-center justify-center" class:bg-accent={i % 2 === 0}>
 			<!-- svelte-ignore a11y-media-has-caption -->
 			<video autoplay loop muted>
-				<source
+				<!-- <source
 					src="https://ik.imagekit.io/dannylongeuay/ndsq/{clip}.mp4?tr=f-webm"
 					type="video/webm"
-				/>
+				/> -->
 				<source src="https://ik.imagekit.io/dannylongeuay/ndsq/{clip}.mp4" type="video/mp4" />
 			</video>
 		</div>
