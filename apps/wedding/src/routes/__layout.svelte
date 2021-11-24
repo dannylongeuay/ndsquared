@@ -61,7 +61,7 @@
 		<ThemeSwitcher />
 	</div>
 </nav>
-<main class="h-screen">
+<main class="min-h-screen">
 	<slot />
 </main>
 <footer class="flex justify-center w-full p-12 bg-neutral">
