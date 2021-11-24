@@ -10,15 +10,37 @@
 		themeChange(false);
 	});
 	let mobileMenuOpen = false;
+	let hideScrollTop = true;
+	let showOnPx = 150;
+
+	function goTop() {
+		document.body.scrollIntoView();
+	}
+
+	function scrollContainer() {
+		return document.documentElement || document.body;
+	}
+
+	function handleOnScroll() {
+		if (!scrollContainer()) {
+			return;
+		}
+		if (scrollContainer().scrollTop > showOnPx) {
+			hideScrollTop = false;
+		} else {
+			hideScrollTop = true;
+		}
+	}
 </script>
 
 <svelte:head>
 	<title>NDSquared | Wedding</title>
 </svelte:head>
+<svelte:window on:scroll={handleOnScroll} />
 
 <aside
 	class:translate-x-full={mobileMenuOpen}
-	class="absolute z-10 w-full h-full bg-neutral-focus transform transition duration-500 ease-in-out -left-full"
+	class="absolute z-10 w-full h-full transition duration-500 ease-in-out transform bg-neutral-focus -left-full"
 	on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
 >
 	<div class="flex flex-col text-xl text-neutral-content">
@@ -47,8 +69,8 @@
 			</svg>
 		</button>
 	</div>
-	<div class="flex-1 items-center">
-		<div class="px-2 mx-2 flex-0 pb-2">
+	<div class="items-center flex-1">
+		<div class="px-2 pb-2 mx-2 flex-0">
 			<a class="text-4xl font-bold text-primary" href="/"> ND </a>
 		</div>
 		<div class="flex-1 hidden px-2 mx-2 lg:block">
@@ -64,6 +86,19 @@
 <main class="min-h-screen">
 	<slot />
 </main>
+<div class="fixed bottom-0 right-0 mb-2 mr-2" class:hidden={hideScrollTop}>
+	<button class="btn btn-primary btn-circle" on:click={goTop}>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="w-5 h-5"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke="currentColor"
+		>
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+		</svg>
+	</button>
+</div>
 <footer class="flex justify-center w-full p-12 bg-neutral">
 	<span class="text-xl text-neutral-content">
 		Copyright &copy; 2021 NDSquared. All Rights Reserved
