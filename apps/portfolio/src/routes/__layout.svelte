@@ -49,7 +49,7 @@
 	</div>
 	<div class="flex-1 items-center">
 		<div class="px-2 mx-2 flex-0 pb-2">
-			<a class="text-4xl font-bold text-primary" href="/"> Logo </a>
+			<a class="text-4xl font-bold text-primary" href="/"> ND </a>
 		</div>
 		<div class="flex-1 hidden px-2 mx-2 lg:block">
 			<div class="items-stretch">
