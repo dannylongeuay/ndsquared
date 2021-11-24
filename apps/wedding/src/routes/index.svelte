@@ -16,7 +16,7 @@
 	<div class="hero min-h-screen bg-accent">
 		<div class="flex-col hero-content">
 			<!-- svelte-ignore a11y-media-has-caption -->
-			<video autoplay loop muted>
+			<video autoplay loop muted playsinline>
 				<source src="https://ik.imagekit.io/dannylongeuay/ndsq/nd_pond_pan.mp4" />
 			</video>
 			<div>
