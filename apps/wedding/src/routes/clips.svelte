@@ -22,7 +22,7 @@
 	{#each clips as clip, i}
 		<div class="min-h-screen flex items-center justify-center" class:bg-accent={i % 2 === 0}>
 			<!-- svelte-ignore a11y-media-has-caption -->
-			<video autoplay loop muted>
+			<video autoplay loop muted playsinline>
 				<!-- <source
 					src="https://ik.imagekit.io/dannylongeuay/ndsq/{clip}.mp4?tr=f-webm"
 					type="video/webm"
