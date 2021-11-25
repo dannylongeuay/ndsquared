@@ -1,9 +1,7 @@
 deployment:
-  enableSecurityContext: false
   image:
     repository: wedding-app
 ingress:
-  enableTls: false
   hosts:
     - host: wedding.localhost
       paths:
