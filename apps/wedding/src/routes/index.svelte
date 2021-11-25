@@ -1,10 +1,11 @@
-<div class="container mx-auto flex-col justify-center">
-	<div class="flex text-center justify-center p-4 border-b-2 border-primary-focus">
-		<h1 class="text-4xl text-secondary-focus font-bold">Nicole and Daniel's Wedding Gallery</h1>
+<div class="container flex-col justify-center mx-auto">
+	<div class="flex justify-center p-4 text-center border-b-2 border-primary-focus">
+		<h1 class="text-4xl font-bold text-secondary-focus">Nicole and Daniel's Wedding Gallery</h1>
 	</div>
-	<div class="hero min-h-screen">
+	<div class="min-h-screen border-b-8 hero border-base-300">
 		<div class="flex-col hero-content">
 			<img
+				class="border-8 border-neutral-focus"
 				src="https://ik.imagekit.io/dannylongeuay/ndsq/nd_fave_4.jpg?tr=h-600"
 				alt="nd_fave_hero"
 			/>
@@ -13,10 +14,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="hero min-h-screen bg-accent">
+	<div class="min-h-screen border-b-8 border-base-300 hero bg-accent">
 		<div class="flex-col hero-content">
 			<!-- svelte-ignore a11y-media-has-caption -->
-			<video autoplay loop muted playsinline>
+			<video autoplay loop muted playsinline class="border-8 border-neutral-focus">
 				<source src="https://ik.imagekit.io/dannylongeuay/ndsq/nd_pond_pan.mp4" />
 			</video>
 			<div>
@@ -24,9 +25,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="hero min-h-screen">
+	<div class="min-h-screen border-b-8 hero border-base-300">
 		<div class="flex-col hero-content">
 			<img
+				class="border-8 border-neutral-focus"
 				src="https://ik.imagekit.io/dannylongeuay/ndsq/nd_photobooth_1.jpg?tr=h-600"
 				alt="nd_photobooth_hero"
 			/>

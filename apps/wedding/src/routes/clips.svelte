@@ -18,11 +18,14 @@
 	];
 </script>
 
-<div class="container mx-auto flex-col justify-center">
+<div class="container flex-col justify-center mx-auto">
 	{#each clips as clip, i}
-		<div class="min-h-screen flex items-center justify-center" class:bg-accent={i % 2 === 0}>
+		<div
+			class="flex items-center justify-center min-h-screen border-b-8 border-base-300"
+			class:bg-accent={i % 2 === 0}
+		>
 			<!-- svelte-ignore a11y-media-has-caption -->
-			<video autoplay loop muted playsinline>
+			<video autoplay loop muted playsinline class="border-8 border-neutral-focus">
 				<!-- <source
 					src="https://ik.imagekit.io/dannylongeuay/ndsq/{clip}.mp4?tr=f-webm"
 					type="video/webm"
