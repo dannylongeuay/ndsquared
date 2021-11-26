@@ -18,7 +18,7 @@
 
 <aside
 	class:translate-x-full={mobileMenuOpen}
-	class="absolute z-10 w-full h-full bg-neutral-focus transform transition duration-500 ease-in-out -left-full"
+	class="absolute z-10 w-full h-full transition duration-500 ease-in-out transform bg-neutral-focus -left-full"
 	on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
 >
 	<div class="flex flex-col text-xl text-neutral-content">
@@ -47,8 +47,8 @@
 			</svg>
 		</button>
 	</div>
-	<div class="flex-1 items-center">
-		<div class="px-2 mx-2 flex-0 pb-2">
+	<div class="items-center flex-1">
+		<div class="px-2 pb-2 mx-2 flex-0">
 			<a class="text-4xl font-bold text-primary" href="/"> ND </a>
 		</div>
 		<div class="flex-1 hidden px-2 mx-2 lg:block">

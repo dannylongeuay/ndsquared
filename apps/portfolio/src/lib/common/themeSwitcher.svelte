@@ -39,11 +39,11 @@
 		>
 		<span class="hidden md:block">Theme</span>
 	</div>
-	<ul tabindex="0" class="shadow menu dropdown-content bg-neutral-focus w-52 pb-2">
+	<ul tabindex="0" class="pb-2 shadow menu dropdown-content bg-neutral-focus w-52">
 		{#each themes as theme}
 			<li>
 				<button
-					class="btn btn-primary mt-2 mx-4"
+					class="mx-4 mt-2 btn btn-primary"
 					data-set-theme={theme.toLowerCase()}
 					data-act-class="ACTIVECLASS">{theme}</button
 				>
