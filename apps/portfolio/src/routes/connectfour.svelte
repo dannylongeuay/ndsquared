@@ -65,7 +65,6 @@
 		{#each board as boardRows, y}
 			{#each boardRows as cell, x}
 				<div class="flex justify-center p-1">
-					{cell.fillColor}
 					<svg
 						viewBox="0 0 100 100"
 						xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +73,7 @@
 						}}
 					>
 						<circle cx="50" cy="50" r="50" fill={cell.fillColor} />
-						Unable to render SVG!
+						Unable to render SVG! {cell.fillColor}
 					</svg>
 				</div>
 			{/each}
