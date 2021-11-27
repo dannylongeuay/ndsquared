@@ -65,17 +65,16 @@
 		{#each board as boardRows, y}
 			{#each boardRows as cell, x}
 				<div class="flex justify-center p-1">
-					<button
-						class="btn btn-circle"
+					<svg
+						viewBox="0 0 100 100"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
 						on:click={() => {
 							setCellFillColor(x, y, currentColor);
 						}}
 					>
-						{cell.fillColor}
-						<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<circle cx="50" cy="50" r="50" stroke="black" stroke-width="3" />
-						</svg>
-					</button>
+						<circle cx="50" cy="50" r="50" fill={cell.fillColor} stroke="black" stroke-width="3" />
+					</svg>
 				</div>
 			{/each}
 		{/each}
