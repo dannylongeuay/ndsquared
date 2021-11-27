@@ -74,6 +74,7 @@
 						}}
 					>
 						<circle cx="50" cy="50" r="50" fill={cell.fillColor} />
+						Unable to render SVG!
 					</svg>
 				</div>
 			{/each}
