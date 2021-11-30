@@ -60,12 +60,18 @@
 <div class="container mx-auto">
 	<div class="flex justify-center mb-8">
 		<h1 class="text-4xl md:text-8xl text-secondary-focus">Connect Four</h1>
+		<svg height="100" width="100">
+			<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+		</svg>
 	</div>
 	<div class="grid grid-cols-9 bg-base-300">
 		{#each board as boardRows, y}
 			{#each boardRows as cell, x}
 				<div class="flex justify-center p-1">
-					<svg
+					<svg height="100" width="100">
+						<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+					</svg>
+					<!-- <svg
 						viewBox="0 0 100 100"
 						xmlns="http://www.w3.org/2000/svg"
 						on:click={() => {
@@ -74,7 +80,7 @@
 					>
 						<circle cx="50" cy="50" r="50" fill={cell.fillColor} />
 						Unable to render SVG! {cell.fillColor}
-					</svg>
+					</svg> -->
 				</div>
 			{/each}
 		{/each}
