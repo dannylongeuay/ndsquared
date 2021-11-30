@@ -15,13 +15,13 @@ const config = {
 		adapter: node(),
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
-		// vite: {
-		// 	server: {
-		// 		hmr: {
-		// 			port: 8000,
-		// 		}
-		// 	}
-		// }
+		vite: {
+			server: {
+				hmr: {
+					port: 8000,
+				}
+			}
+		}
 	}
 };
 
