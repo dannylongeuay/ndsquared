@@ -64,23 +64,21 @@
 			<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
 		</svg>
 	</div>
-	<div class="flex justify-center">
-		<div class="grid max-w-screen-sm grid-cols-9 bg-base-300 md:max-w-screen-md lg:max-w-screen-lg">
-			{#each board as boardRows, y}
-				{#each boardRows as cell, x}
-					<div class="p-1">
-						<svg
-							viewBox="0 0 100 100"
-							xmlns="http://www.w3.org/2000/svg"
-							on:click={() => {
-								setCellFillColor(x, y, currentColor);
-							}}
-						>
-							<circle cx="50" cy="50" r="50" fill={cell.fillColor} />
-						</svg>
-					</div>
-				{/each}
+	<div class="grid max-w-screen-sm grid-cols-9 bg-base-300 md:max-w-screen-md lg:max-w-screen-lg">
+		{#each board as boardRows, y}
+			{#each boardRows as cell, x}
+				<div class="p-1">
+					<svg
+						viewBox="0 0 100 100"
+						xmlns="http://www.w3.org/2000/svg"
+						on:click={() => {
+							setCellFillColor(x, y, currentColor);
+						}}
+					>
+						<circle cx="50" cy="50" r="50" fill={cell.fillColor} />
+					</svg>
+				</div>
 			{/each}
-		</div>
+		{/each}
 	</div>
 </div>
