@@ -20,7 +20,6 @@
 			console.log('invalid move', x, y, board[y][x]);
 			return;
 		}
-		// console.log(x, y, board[y][x]);
 		board[y][x].fillColor = color;
 		if (currentColor === 'red') {
 			currentColor = 'yellow';
