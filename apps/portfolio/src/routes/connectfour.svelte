@@ -83,17 +83,17 @@
 				<circle cx="10" cy="10" r="10" stroke="black" stroke-width="3" fill="purple" />
 			</svg>
 		</div>
-		<div class="flex justify-center p-1">
+		<div>
 			<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
 				<circle cx="50" cy="50" r="50" fill="blue" />
 			</svg>
 		</div>
-		<div class="flex justify-center p-1">
+		<div>
 			<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
 				<circle cx="25" cy="25" r="25" fill="magenta" />
 			</svg>
 		</div>
-		<div class="flex justify-center p-1">
+		<div>
 			<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 				<circle cx="10" cy="10" r="10" fill="pink" />
 			</svg>
