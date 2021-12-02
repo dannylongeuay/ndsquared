@@ -6,3 +6,4 @@ package
 .env
 tilt_modules
 .helm
+*.pyc
