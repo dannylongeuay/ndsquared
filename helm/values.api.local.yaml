@@ -1,0 +1,9 @@
+deployment:
+  image:
+    repository: api-app
+ingress:
+  hosts:
+    - host: api.localhost
+      paths:
+        - path: /
+          pathType: Prefix

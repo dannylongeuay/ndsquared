@@ -16,6 +16,15 @@ docker_build(
   ],
 )
 
+docker_build(
+  'api-app',
+  './apps/api/',
+  entrypoint="uvicorn main:app --host=0.0.0.0 --reload",
+  live_update=[
+    sync('./apps/api/', '/usr/src')
+  ],
+)
+
 k8s_yaml(
   helm(
     "helm/portfolio/",
@@ -40,6 +49,18 @@ k8s_yaml(
   )
 )
 
+k8s_yaml(
+  helm(
+    "helm/api/",
+    name="dev",
+    namespace="ndsquared",
+    values=[
+      "helm/values.common.local.yaml",
+      "helm/values.api.local.yaml",
+    ],
+  )
+)
+
 
 k8s_resource(
   "dev-portfolio",
@@ -56,5 +77,14 @@ k8s_resource(
   labels=["wedding"],
   objects=[
     "dev-wedding:ingress",
+  ],
+)
+
+k8s_resource(
+  "dev-api",
+  links=["http://api.localhost:8000/"],
+  labels=["api"],
+  objects=[
+    "dev-api:ingress",
   ],
 )

@@ -15,4 +15,9 @@ async def long_running_task(task_id: uuid4):
 async def index():
     task_id = uuid4()
     await long_running_task(task_id)
-    return {'hello', 'world'}
+    return {'hello', 'universe'}
+
+
+@app.get('/ping')
+def pong():
+    return {'message', 'pong'}
