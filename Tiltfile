@@ -19,7 +19,7 @@ docker_build(
 docker_build(
   'api-app',
   './apps/api/',
-  entrypoint="uvicorn main:app --host=0.0.0.0 --reload",
+  entrypoint="uvicorn app.main:app --host=0.0.0.0 --reload",
   live_update=[
     sync('./apps/api/', '/usr/src')
   ],
