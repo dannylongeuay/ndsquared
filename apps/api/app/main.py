@@ -2,18 +2,24 @@ import sys
 
 from typing import Optional
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.connectfour import ConnectFour, DefaultPiece, find_best_move
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_methods=['*'],
+)
 
 
 class ConnectFourRequest(BaseModel):
     player_piece: Optional[str] = DefaultPiece.PLAYER.value
     computer_piece: Optional[str] = DefaultPiece.COMPUTER.value
     empty_piece: Optional[str] = DefaultPiece.EMPTY.value
-    depth: Optional[int] = 3
+    depth: Optional[int] = 4
     board: list[list[str]]
 
     class Config:
@@ -26,7 +32,7 @@ class ConnectFourRequest(BaseModel):
                 'empty_piece':
                 '.',
                 'depth':
-                3,
+                4,
                 'board': [
                     ['.', '.', '.', '.', '.'],
                     ['.', '.', '.', '.', '.'],

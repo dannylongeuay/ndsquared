@@ -1,17 +1,22 @@
 <script>
 	const BOARD_WIDTH = 9;
 	const BOARD_HEIGHT = 7;
+	const PLAYER_COLOR = 'red';
+	const OPPONENT_COLOR = 'yellow';
+	const NEUTRUAL_COLOR = 'gray';
+	const API_URL = import.meta.env.VITE_API_BASE_URL + '/connectfour';
+
 	let gamePaused = false;
-	let currentColor = 'red';
-	let neutralColor = 'gray';
-	let board = initBoard(BOARD_WIDTH, BOARD_HEIGHT);
+	let currentColor = PLAYER_COLOR;
 	let winningMsg = '';
+	let board = initBoard(BOARD_WIDTH, BOARD_HEIGHT);
+
 	function initBoard(xdim, ydim) {
 		let tempBoard = new Array(ydim);
 		for (let y = 0; y < ydim; y++) {
 			tempBoard[y] = new Array(xdim);
 			for (let x = 0; x < xdim; x++) {
-				tempBoard[y][x] = { fillColor: neutralColor };
+				tempBoard[y][x] = { fillColor: NEUTRUAL_COLOR };
 			}
 		}
 		return tempBoard;
@@ -24,7 +29,44 @@
 		winningMsg = '';
 	}
 
-	function handleTurn(x, y, color) {
+	function getGameBoard(xdim, ydim) {
+		let tempBoard = new Array(ydim);
+		for (let y = 0; y < ydim; y++) {
+			tempBoard[y] = new Array(xdim);
+			for (let x = 0; x < xdim; x++) {
+				switch (board[y][x].fillColor) {
+					case PLAYER_COLOR:
+						tempBoard[y][x] = 'X';
+						break;
+					case OPPONENT_COLOR:
+						tempBoard[y][x] = 'O';
+						break;
+					default:
+						tempBoard[y][x] = '.';
+				}
+			}
+		}
+		return tempBoard;
+	}
+
+	function getOpenRow(x) {
+		for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
+			if (board[y][x].fillColor === NEUTRUAL_COLOR) {
+				return y;
+			}
+		}
+		return null;
+	}
+
+	function dropPiece(x, color) {
+		let y = getOpenRow(x);
+		if (y === null) {
+			return;
+		}
+		board[y][x].fillColor = color;
+	}
+
+	async function handleTurn(x, y, color) {
 		if (gamePaused) return;
 		if (!isValidMove(x, y)) {
 			console.log('invalid move', x, y, board[y][x]);
@@ -38,15 +80,45 @@
 			winningMsg = `${color} won!`;
 			return;
 		}
-		if (currentColor === 'red') {
-			currentColor = 'yellow';
+		if (currentColor === PLAYER_COLOR) {
+			currentColor = OPPONENT_COLOR;
 		} else {
-			currentColor = 'red';
+			currentColor = PLAYER_COLOR;
 		}
+		const gameBoard = getGameBoard(BOARD_WIDTH, BOARD_HEIGHT);
+		const payload = {
+			board: gameBoard
+		};
+		gamePaused = true;
+		const response = await fetch(API_URL, {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+		const data = await response.json();
+
+		color = OPPONENT_COLOR;
+
+		dropPiece(data.column, color);
+
+		if (isWinningMove(color)) {
+			console.log(`${color} has won!`);
+			gamePaused = true;
+			winningMsg = `${color} won!`;
+			return;
+		}
+		if (currentColor === PLAYER_COLOR) {
+			currentColor = OPPONENT_COLOR;
+		} else {
+			currentColor = PLAYER_COLOR;
+		}
+		gamePaused = false;
 	}
 
 	function isValidMove(x, y) {
-		if (board[y][x].fillColor !== neutralColor) {
+		if (board[y][x].fillColor !== NEUTRUAL_COLOR) {
 			return false;
 		}
 		if (!(`${x},${y}` in getValidMoves())) {
@@ -63,7 +135,7 @@
 				if (x in foundValidMove) {
 					continue;
 				}
-				if (board[y][x].fillColor !== neutralColor) {
+				if (board[y][x].fillColor !== NEUTRUAL_COLOR) {
 					continue;
 				}
 				foundValidMove[x] = true;
@@ -185,7 +257,7 @@
 			{/each}
 		{/each}
 	</div>
-	<div class="flex justify-center mt-4">
+	<div class="flex justify-center my-4">
 		<button class="btn btn-primary" on:click={resetBoard}>Reset</button>
 	</div>
 </div>

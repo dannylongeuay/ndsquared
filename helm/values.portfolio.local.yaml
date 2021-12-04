@@ -1,4 +1,5 @@
 deployment:
+  apiBaseUrl: "http://api.localhost:8000"
   image:
     repository: portfolio-app
 ingress:
