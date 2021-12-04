@@ -12,8 +12,8 @@
 	const PLAYER_COLOR = 'red';
 	const OPPONENT_COLOR = 'yellow';
 	const NEUTRUAL_COLOR = 'gray';
-	const MODE_ONE_PLAYER = '1 player';
-	const MODE_TWO_PLAYER = '2 players';
+	const MODE_ONE_PLAYER = '1 Player';
+	const MODE_TWO_PLAYER = '2 Players';
 
 	let gamePaused = false;
 	let currentColor = PLAYER_COLOR;
@@ -256,7 +256,7 @@
 	</div>
 	<div class="flex items-center justify-center mb-4">
 		<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode</h2></div>
-		<div class="btn-group">
+		<div class="flex-shrink-0 btn-group">
 			<input
 				type="radio"
 				name="options"
