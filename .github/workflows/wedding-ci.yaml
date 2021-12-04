@@ -2,11 +2,12 @@ name: Wedding CI
 on:
   pull_request:
     paths:
+      - ".github/workflows/wedding-ci.yaml"
       - "apps/wedding/**"
       - "helm/wedding/**"
 jobs:
-  helmdiff:
-    name: Helm Diff
+  wedding-diff:
+    name: Wedding Diff
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

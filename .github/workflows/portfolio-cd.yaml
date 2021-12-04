@@ -4,11 +4,12 @@ on:
     branches:
       - main
     paths:
+      - ".github/workflows/portfolio-cd.yaml"
       - "apps/portfolio/**"
       - "helm/portfolio/**"
 jobs:
-  helmdeploy:
-    name: Helm Deploy
+  portfolio-deploy:
+    name: Portfolio Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

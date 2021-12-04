@@ -2,11 +2,12 @@ name: Portfolio CI
 on:
   pull_request:
     paths:
+      - ".github/workflows/portfolio-ci.yaml"
       - "apps/portfolio/**"
       - "helm/portfolio/**"
 jobs:
-  helmdiff:
-    name: Helm Diff
+  portfolio-diff:
+    name: Portfolio Diff
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
