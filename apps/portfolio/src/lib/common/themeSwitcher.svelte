@@ -23,8 +23,8 @@
 	];
 </script>
 
-<div class="z-0 dropdown dropdown-left">
-	<div tabindex="0" class="btn">
+<div class="z-10 dropdown dropdown-left">
+	<div tabindex="0" class="btn btn-ghost">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"

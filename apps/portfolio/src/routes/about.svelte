@@ -1,3 +1,13 @@
-<div class="container flex justify-center mx-auto">
-	<h1 class="text-4xl font-bold text-primary">About Content</h1>
+<div class="container flex items-center justify-center h-screen mx-auto">
+	<div class="pr-4 mockup-code">
+		<pre data-prefix=">">
+			<code>Name: Daniel</code>
+		</pre>
+		<pre data-prefix=">">
+			<code>Title: Senior SRE</code>
+		</pre>
+		<pre data-prefix=">">
+			<code>Loc: California</code>
+		</pre>
+	</div>
 </div>

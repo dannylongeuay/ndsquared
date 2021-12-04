@@ -12,11 +12,14 @@
 	const PLAYER_COLOR = 'red';
 	const OPPONENT_COLOR = 'yellow';
 	const NEUTRUAL_COLOR = 'gray';
+	const MODE_ONE_PLAYER = '1 player';
+	const MODE_TWO_PLAYER = '2 players';
 
 	let gamePaused = false;
 	let currentColor = PLAYER_COLOR;
 	let winningMsg = '';
 	let board = initBoard(BOARD_WIDTH, BOARD_HEIGHT);
+	let mode = MODE_ONE_PLAYER;
 
 	function initBoard(xdim, ydim) {
 		let tempBoard = new Array(ydim);
@@ -32,7 +35,7 @@
 	function resetBoard() {
 		board = initBoard(BOARD_WIDTH, BOARD_HEIGHT);
 		gamePaused = false;
-		currentColor = 'red';
+		currentColor = PLAYER_COLOR;
 		winningMsg = '';
 	}
 
@@ -92,6 +95,11 @@
 		} else {
 			currentColor = PLAYER_COLOR;
 		}
+
+		if (mode === MODE_TWO_PLAYER) {
+			return;
+		}
+
 		const gameBoard = getGameBoard(BOARD_WIDTH, BOARD_HEIGHT);
 		const payload = {
 			board: gameBoard
@@ -246,8 +254,37 @@
 			<circle cx="50" cy="50" r="50" stroke="black" stroke-width="3" fill={currentColor} />
 		</svg>
 	</div>
+	<div class="flex items-center justify-center mb-4">
+		<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode</h2></div>
+		<div class="btn-group">
+			<input
+				type="radio"
+				name="options"
+				id="option1"
+				checked={mode === MODE_ONE_PLAYER}
+				data-title={MODE_ONE_PLAYER}
+				class="btn"
+				on:click={() => {
+					mode = MODE_ONE_PLAYER;
+					resetBoard();
+				}}
+			/>
+			<input
+				type="radio"
+				name="options"
+				id="option2"
+				checked={mode === MODE_TWO_PLAYER}
+				data-title={MODE_TWO_PLAYER}
+				class="btn"
+				on:click={() => {
+					mode = MODE_TWO_PLAYER;
+					resetBoard();
+				}}
+			/>
+		</div>
+	</div>
 	<div
-		class="grid max-w-screen-sm grid-cols-9 mx-auto bg-blue-700 md:max-w-screen-md lg:max-w-screen-lg"
+		class="grid max-w-screen-sm grid-cols-9 mx-auto bg-blue-700 rounded-2xl md:max-w-screen-md lg:max-w-screen-lg"
 	>
 		{#each board as boardRows, y}
 			{#each boardRows as cell, x}
