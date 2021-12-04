@@ -1,10 +1,12 @@
 <script>
+	import { apiBaseUrl } from '$lib/environment';
+
 	const BOARD_WIDTH = 9;
 	const BOARD_HEIGHT = 7;
 	const PLAYER_COLOR = 'red';
 	const OPPONENT_COLOR = 'yellow';
 	const NEUTRUAL_COLOR = 'gray';
-	const API_URL = import.meta.env.VITE_API_BASE_URL + '/connectfour';
+	const API_URL = apiBaseUrl + '/connectfour';
 
 	let gamePaused = false;
 	let currentColor = PLAYER_COLOR;
