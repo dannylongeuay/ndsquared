@@ -1,3 +1,21 @@
+<script lang="ts" context="module">
+	export async function load({ fetch }) {
+		const url = '/appsettings.json';
+		const res = await fetch(url);
+		if (res.ok) {
+			return {
+				props: {
+					APPSETTINGS: await res.json()
+				}
+			};
+		}
+		return {
+			status: res.status,
+			error: new Error('Could not load configuration')
+		};
+	}
+</script>
+
 <script>
 	import '../app.css';
 	import '../app.css';
@@ -5,6 +23,11 @@
 	import ThemeSwitcher from '$lib/common/themeSwitcher.svelte';
 	import { onMount } from 'svelte';
 	import { themeChange } from 'theme-change';
+	import { appSettingsStore } from '$lib/stores/appsettings';
+
+	export let APPSETTINGS = $appSettingsStore;
+
+	$appSettingsStore = APPSETTINGS;
 
 	onMount(async () => {
 		themeChange(false);

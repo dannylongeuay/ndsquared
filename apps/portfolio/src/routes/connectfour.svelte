@@ -1,12 +1,17 @@
 <script>
-	import { apiBaseUrl } from '$lib/environment';
+	import { appSettingsStore } from '$lib/stores/appsettings';
+
+	let appSettings;
+
+	appSettingsStore.subscribe((value) => {
+		appSettings = value;
+	});
 
 	const BOARD_WIDTH = 9;
 	const BOARD_HEIGHT = 7;
 	const PLAYER_COLOR = 'red';
 	const OPPONENT_COLOR = 'yellow';
 	const NEUTRUAL_COLOR = 'gray';
-	const API_URL = apiBaseUrl + '/connectfour';
 
 	let gamePaused = false;
 	let currentColor = PLAYER_COLOR;
@@ -92,7 +97,8 @@
 			board: gameBoard
 		};
 		gamePaused = true;
-		const response = await fetch(API_URL, {
+		const connect_four_url = appSettings.API_BASE_URL + '/connectfour';
+		const response = await fetch(connect_four_url, {
 			method: 'POST',
 			headers: {
 				'Content-type': 'application/json'
