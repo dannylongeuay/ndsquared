@@ -256,7 +256,7 @@
 	</div>
 	<div class="flex items-center justify-center mb-4">
 		<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode</h2></div>
-		<div class="flex-shrink-0 btn-group">
+		<div class="min-w-max btn-group">
 			<input
 				type="radio"
 				name="options"
