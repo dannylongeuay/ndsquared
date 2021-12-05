@@ -12,8 +12,8 @@
 	const PLAYER_COLOR = 'red';
 	const OPPONENT_COLOR = 'yellow';
 	const NEUTRUAL_COLOR = 'gray';
-	const MODE_ONE_PLAYER = '1-Player';
-	const MODE_TWO_PLAYER = '2-Players';
+	const MODE_ONE_PLAYER = '1P';
+	const MODE_TWO_PLAYER = '2P';
 
 	let gamePaused = false;
 	let currentColor = PLAYER_COLOR;
