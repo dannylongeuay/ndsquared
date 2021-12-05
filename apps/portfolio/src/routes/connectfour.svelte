@@ -12,8 +12,8 @@
 	const PLAYER_COLOR = 'red';
 	const OPPONENT_COLOR = 'yellow';
 	const NEUTRUAL_COLOR = 'gray';
-	const MODE_ONE_PLAYER = '1 Player';
-	const MODE_TWO_PLAYER = '2 Players';
+	const MODE_ONE_PLAYER = '1-Player';
+	const MODE_TWO_PLAYER = '2-Players';
 
 	let gamePaused = false;
 	let currentColor = PLAYER_COLOR;
@@ -256,14 +256,14 @@
 	</div>
 	<div class="flex items-center justify-center mb-4">
 		<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode</h2></div>
-		<div class="min-w-max btn-group">
+		<div class="btn-group">
 			<input
 				type="radio"
 				name="options"
 				id="option1"
 				checked={mode === MODE_ONE_PLAYER}
 				data-title={MODE_ONE_PLAYER}
-				class="btn"
+				class="btn md:btn-lg"
 				on:click={() => {
 					mode = MODE_ONE_PLAYER;
 					resetBoard();
@@ -275,7 +275,7 @@
 				id="option2"
 				checked={mode === MODE_TWO_PLAYER}
 				data-title={MODE_TWO_PLAYER}
-				class="btn"
+				class="btn md:btn-lg"
 				on:click={() => {
 					mode = MODE_TWO_PLAYER;
 					resetBoard();
