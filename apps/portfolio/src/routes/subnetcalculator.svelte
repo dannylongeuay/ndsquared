@@ -148,6 +148,7 @@
 		<table class="table w-full">
 			<thead>
 				<tr>
+					<th />
 					<th>CIDR</th>
 					<th>Mask</th>
 					<th>Hosts</th>
@@ -160,6 +161,7 @@
 			<tbody>
 				{#each subnets as subnet, i}
 					<tr>
+						<td>{i + 1}</td>
 						<td>{subnet.networkCidr}</td>
 						<td>{subnet.networkMask}</td>
 						<td>{subnet.hosts}</td>
