@@ -214,7 +214,9 @@
 	<div class="flex justify-center py-4">
 		<div class="form-control">
 			<div class="flex space-x-2">
-				<input type="text" bind:value={cidr} class="w-full input input-primary input-bordered" />
+				<form on:submit|preventDefault={calc}>
+					<input type="text" bind:value={cidr} class="w-full input input-primary input-bordered" />
+				</form>
 				<button on:click={calc} class="btn btn-primary">Calc</button>
 			</div>
 		</div>
