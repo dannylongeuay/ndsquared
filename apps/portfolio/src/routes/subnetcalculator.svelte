@@ -1,7 +1,9 @@
 <script>
+	import { v4 as uuidv4 } from 'uuid';
 	import { onMount } from 'svelte';
 	let cidr = '192.168.0.0/24';
 	let subnets = [];
+	let errorMsg = null;
 
 	onMount(() => {
 		calc();
@@ -9,27 +11,55 @@
 
 	const calc = () => {
 		const { octets, prefix } = parseCidr(cidr);
-		const subnetInfo = getSubnetInfo(octets, prefix);
+		if (octets === null) {
+			errorMsg = `${cidr} does not have a valid IP address.`;
+			return;
+		}
+		if (prefix === null) {
+			errorMsg = `${cidr} does not have a valid prefix.`;
+			return;
+		}
+		errorMsg = null;
+		const subnetInfo = getSubnetInfo(octets, prefix, null);
 		subnets = [subnetInfo];
 	};
 
 	const parseCidr = (cidr) => {
 		const [address, prefixStr] = cidr.split('/');
-		const octets = address.split('.').map(Number);
+		let octets = address.split('.').map(Number);
+		let octetCount = 0;
 		for (const octet of octets) {
+			if (Number.isNaN(octet)) {
+				octets = null;
+				break;
+			}
 			if (octet < 0) {
-				return null;
+				octets = null;
+				break;
 			}
 			if (octet > 255) {
-				return null;
+				octets = null;
+				break;
+			}
+			octetCount++;
+		}
+		if (octetCount !== 4) {
+			octets = null;
+		}
+		let strOctets = address.split('.');
+		for (const strOctet of strOctets) {
+			if (strOctet === '') {
+				octets = null;
+				break;
 			}
 		}
-		const prefix = Number(prefixStr);
-		if (prefix < 1) {
-			return null;
-		}
-		if (prefix > 32) {
-			return null;
+		let prefix = Number(prefixStr);
+		if (Number.isNaN(prefix)) {
+			prefix = null;
+		} else if (prefix < 1) {
+			prefix = null;
+		} else if (prefix > 32) {
+			prefix = null;
 		}
 		return {
 			octets,
@@ -37,7 +67,7 @@
 		};
 	};
 
-	const getSubnetInfo = (octets, prefix) => {
+	const getSubnetInfo = (octets, prefix, uuid) => {
 		const networkMaskOctets = getMaskOctets(prefix, false);
 		const hostMaskOctets = getMaskOctets(prefix, true);
 		const networkAddressOctets = getAddressOctets(octets, networkMaskOctets, false);
@@ -56,7 +86,12 @@
 			firstUsableAddress = networkAddressOctets.join('.');
 			lastUsableAddress = getNextAddressOctets(networkAddressOctets).join('.');
 		}
+		if (uuid === null) {
+			uuid = uuidv4();
+		}
+		const joined = [];
 		return {
+			uuid,
 			networkCidr,
 			networkMask,
 			hosts,
@@ -64,7 +99,8 @@
 			lastUsableAddress,
 			prefix,
 			networkAddressOctets,
-			broadcastAddressOctets
+			broadcastAddressOctets,
+			joined
 		};
 	};
 
@@ -118,11 +154,19 @@
 
 	const divide = (index) => {
 		const subnet = subnets[index];
-		const lowerSubnetInfo = getSubnetInfo(subnet.networkAddressOctets, subnet.prefix + 1);
+		const lowerSubnetInfo = getSubnetInfo(
+			subnet.networkAddressOctets,
+			subnet.prefix + 1,
+			subnet.uuid
+		);
+		lowerSubnetInfo.joined = lowerSubnetInfo.joined.concat(subnet.joined);
 		const upperSubnetInfo = getSubnetInfo(
 			getNextAddressOctets(lowerSubnetInfo.broadcastAddressOctets),
-			subnet.prefix + 1
+			subnet.prefix + 1,
+			null
 		);
+		lowerSubnetInfo.joined.push(upperSubnetInfo.uuid);
+		upperSubnetInfo.joined.push(lowerSubnetInfo.uuid);
 		subnets[index] = lowerSubnetInfo;
 		subnets = subnets
 			.slice(0, index + 1)
@@ -131,7 +175,38 @@
 	};
 
 	const join = (index) => {
-		const subnet = subnets[index];
+		const subnetInfo = subnets[index];
+		const pairUuid = subnetInfo.joined.pop();
+		const { pairIndex, pairSubnetInfo } = getPairObject(pairUuid);
+		let subnetUuid = pairSubnetInfo.joined.pop();
+		while (subnetUuid !== subnetInfo.uuid) {
+			subnetUuid = pairSubnetInfo.joined.pop();
+		}
+		let lowerSubnetInfo = subnetInfo;
+		let upperSubnetInfo = pairSubnetInfo;
+		if (pairIndex < index) {
+			lowerSubnetInfo = pairSubnetInfo;
+			upperSubnetInfo = subnetInfo;
+		}
+		const joinedSubnetInfo = getSubnetInfo(
+			lowerSubnetInfo.networkAddressOctets,
+			upperSubnetInfo.prefix - 1,
+			lowerSubnetInfo.uuid
+		);
+		joinedSubnetInfo.joined = joinedSubnetInfo.joined.concat(lowerSubnetInfo.joined);
+		subnets[Math.min(index, pairIndex)] = joinedSubnetInfo;
+		subnets = subnets
+			.slice(0, Math.min(index, pairIndex) + 1)
+			.concat(subnets.slice(Math.max(index, pairIndex) + 1));
+	};
+
+	const getPairObject = (uuid) => {
+		for (let i = 0; i < subnets.length; i++) {
+			if (uuid === subnets[i].uuid) {
+				return { pairIndex: i, pairSubnetInfo: subnets[i] };
+			}
+		}
+		return { pairIndex: null, pairSubnetInfo: null };
 	};
 </script>
 
@@ -144,52 +219,56 @@
 			</div>
 		</div>
 	</div>
-	<div class="overflow-x-auto">
-		<table class="table w-full">
-			<thead>
-				<tr>
-					<th />
-					<th>CIDR</th>
-					<th>Mask</th>
-					<th>Hosts</th>
-					<th>First Usable Address</th>
-					<th>Last Usable Address</th>
-					<th />
-					<th />
-				</tr>
-			</thead>
-			<tbody>
-				{#each subnets as subnet, i}
+	{#if errorMsg}
+		<h1 class="bg-base-300 text-secondary text-xl text-center p-4">{errorMsg}</h1>
+	{:else}
+		<div class="overflow-x-auto">
+			<table class="table w-full">
+				<thead>
 					<tr>
-						<td>{i + 1}</td>
-						<td>{subnet.networkCidr}</td>
-						<td>{subnet.networkMask}</td>
-						<td>{subnet.hosts}</td>
-						<td>{subnet.firstUsableAddress}</td>
-						<td>{subnet.lastUsableAddress}</td>
-						<td>
-							{#if subnet.prefix < 32}
-								<button
-									on:click={() => {
-										divide(i);
-									}}
-									class="btn btn-secondary">Divide</button
-								>
-							{/if}
-						</td>
-						<td>
-							{#if i > 0}
-								<button
-									on:click={() => {
-										join(i);
-									}}
-									class="btn btn-accent">Join</button
-								>
-							{/if}
-						</td>
+						<th />
+						<th>CIDR</th>
+						<th>Mask</th>
+						<th>Hosts</th>
+						<th>First Usable Address</th>
+						<th>Last Usable Address</th>
+						<th />
+						<th />
 					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
+				</thead>
+				<tbody>
+					{#each subnets as subnet, i}
+						<tr>
+							<td>{i + 1}</td>
+							<td>{subnet.networkCidr}</td>
+							<td>{subnet.networkMask}</td>
+							<td>{subnet.hosts}</td>
+							<td>{subnet.firstUsableAddress}</td>
+							<td>{subnet.lastUsableAddress}</td>
+							<td>
+								{#if subnet.prefix < 32}
+									<button
+										on:click={() => {
+											divide(i);
+										}}
+										class="btn btn-secondary">Divide</button
+									>
+								{/if}
+							</td>
+							<td>
+								{#if subnet.joined.length > 0}
+									<button
+										on:click={() => {
+											join(i);
+										}}
+										class="btn btn-accent">Join</button
+									>
+								{/if}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	{/if}
 </div>
