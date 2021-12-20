@@ -274,32 +274,6 @@
 				}}>{MODE_TWO_PLAYER}</button
 			>
 		</div>
-		<div class="btn-group">
-			<input
-				type="radio"
-				name="options"
-				id="option1"
-				checked={mode === MODE_ONE_PLAYER}
-				data-title={MODE_ONE_PLAYER}
-				class="btn md:btn-lg"
-				on:click={() => {
-					mode = MODE_ONE_PLAYER;
-					resetBoard();
-				}}
-			/>
-			<input
-				type="radio"
-				name="options"
-				id="option2"
-				checked={mode === MODE_TWO_PLAYER}
-				data-title={MODE_TWO_PLAYER}
-				class="btn md:btn-lg"
-				on:click={() => {
-					mode = MODE_TWO_PLAYER;
-					resetBoard();
-				}}
-			/>
-		</div>
 	</div>
 	<div
 		class="grid max-w-screen-sm grid-cols-9 mx-auto border-4 border-primary bg-blue-700 rounded-2xl md:max-w-screen-md lg:max-w-screen-lg"

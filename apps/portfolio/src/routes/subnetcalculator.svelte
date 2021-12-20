@@ -1,13 +1,42 @@
 <script>
 	import { v4 as uuidv4 } from 'uuid';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+
 	let cidr = '192.168.0.0/24';
 	let subnets = [];
 	let errorMsg = null;
+	let pageData = null;
+	let breakdowns = [];
 
-	onMount(() => {
-		calc();
+	$: breakdownUrl = baseBreakdownUrl() + breakdowns.join('-');
+
+	page.subscribe((data) => {
+		pageData = data;
 	});
+
+	onMount(async () => {
+		const network = pageData.query.get('network');
+		const mask = pageData.query.get('mask');
+		const breakdown = pageData.query.get('breakdown');
+		if (network && mask) {
+			cidr = `${network}/${mask}`;
+		}
+		if (breakdown) {
+			calc();
+			execBreakdown(breakdown);
+		} else {
+			calc();
+		}
+	});
+
+	const baseBreakdownUrl = () => {
+		const host = pageData.host;
+		const path = pageData.path;
+		const { octets, prefix } = parseCidr(cidr);
+		const network = octets.join('.');
+		return `${host}${path}?network=${network}&mask=${prefix}&breakdown=`;
+	};
 
 	const calc = () => {
 		const { octets, prefix } = parseCidr(cidr);
@@ -22,6 +51,19 @@
 		errorMsg = null;
 		const subnetInfo = getSubnetInfo(octets, prefix, null);
 		subnets = [subnetInfo];
+	};
+
+	const execBreakdown = async (breakdown) => {
+		const operations = breakdown.split('-');
+		for (const operation of operations) {
+			await new Promise((r) => setTimeout(r, 150));
+			const [action, index] = operation.split(',');
+			if (action === 'd') {
+				divide(Number(index));
+			} else {
+				join(Number(index));
+			}
+		}
 	};
 
 	const parseCidr = (cidr) => {
@@ -105,8 +147,20 @@
 	};
 
 	const getNextAddressOctets = (octets) => {
-		const addressOctets = octets.slice(0, 3);
-		addressOctets.push(octets[3] + 1);
+		let addressOctets = [];
+		let addNext = true;
+		for (let i = octets.length - 1; i >= 0; i--) {
+			let nextNum = octets[i];
+			if (addNext) {
+				nextNum++;
+				addNext = false;
+				if (nextNum >= 256) {
+					nextNum = 0;
+					addNext = true;
+				}
+			}
+			addressOctets = [nextNum].concat(addressOctets);
+		}
 		return addressOctets;
 	};
 
@@ -172,6 +226,7 @@
 			.slice(0, index + 1)
 			.concat([upperSubnetInfo])
 			.concat(subnets.slice(index + 1));
+		breakdowns = breakdowns.concat(`d,${index}`);
 	};
 
 	const join = (index) => {
@@ -198,6 +253,7 @@
 		subnets = subnets
 			.slice(0, Math.min(index, pairIndex) + 1)
 			.concat(subnets.slice(Math.max(index, pairIndex) + 1));
+		breakdowns = breakdowns.concat(`j,${index}`);
 	};
 
 	const getPairObject = (uuid) => {
@@ -224,8 +280,9 @@
 	{#if errorMsg}
 		<h1 class="bg-base-300 text-secondary text-xl text-center p-4">{errorMsg}</h1>
 	{:else}
+		<div class="m-4 text-center"><a href={breakdownUrl} target="_blank">Bookmark URL</a></div>
 		<div class="overflow-x-auto">
-			<table class="table w-full">
+			<table class="table w-full z-0">
 				<thead>
 					<tr>
 						<th />
