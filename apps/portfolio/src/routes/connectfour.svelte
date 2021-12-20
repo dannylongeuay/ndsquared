@@ -12,8 +12,8 @@
 	const PLAYER_COLOR = 'red';
 	const OPPONENT_COLOR = 'yellow';
 	const NEUTRUAL_COLOR = 'gray';
-	const MODE_ONE_PLAYER = '1P';
-	const MODE_TWO_PLAYER = '2P';
+	const MODE_ONE_PLAYER = '1 Player';
+	const MODE_TWO_PLAYER = '2 Players';
 
 	let gamePaused = false;
 	let currentColor = PLAYER_COLOR;
@@ -255,7 +255,25 @@
 		</svg>
 	</div>
 	<div class="flex items-center justify-center mb-4">
-		<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode</h2></div>
+		<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode:</h2></div>
+		<div class="mx-2">
+			<button
+				class:btn-primary={mode === MODE_ONE_PLAYER}
+				class="btn"
+				on:click={() => {
+					mode = MODE_ONE_PLAYER;
+					resetBoard();
+				}}>{MODE_ONE_PLAYER}</button
+			>
+			<button
+				class:btn-primary={mode === MODE_TWO_PLAYER}
+				class="btn"
+				on:click={() => {
+					mode = MODE_TWO_PLAYER;
+					resetBoard();
+				}}>{MODE_TWO_PLAYER}</button
+			>
+		</div>
 		<div class="btn-group">
 			<input
 				type="radio"
@@ -284,7 +302,7 @@
 		</div>
 	</div>
 	<div
-		class="grid max-w-screen-sm grid-cols-9 mx-auto bg-blue-700 rounded-2xl md:max-w-screen-md lg:max-w-screen-lg"
+		class="grid max-w-screen-sm grid-cols-9 mx-auto border-4 border-primary bg-blue-700 rounded-2xl md:max-w-screen-md lg:max-w-screen-lg"
 	>
 		{#each board as boardRows, y}
 			{#each boardRows as cell, x}
