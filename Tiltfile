@@ -64,7 +64,8 @@ k8s_yaml(
   )
 )
 
-k8s_yaml(
+# Filter out production sealed secrets
+sealedsecret_yaml, rest = filter_yaml(
   helm(
     "helm/api/",
     name="dev",
@@ -73,8 +74,11 @@ k8s_yaml(
       "helm/values.common.local.yaml",
       "helm/values.api.local.yaml",
     ],
-  )
+  ),
+  kind='SealedSecret'
 )
+
+k8s_yaml(rest)
 
 k8s_resource(
   "redis-master",
