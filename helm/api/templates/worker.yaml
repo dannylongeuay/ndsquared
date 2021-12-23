@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "api.fullname" . }}
+  name: {{ include "api.fullname" . }}-worker
   labels:
     {{- include "api.labels" . | nindent 4 }}
 spec:
@@ -23,31 +23,18 @@ spec:
         {{- toYaml .Values.deployment.podSecurityContext | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-worker
           args:
-            - "uvicorn"
-            - "app.main:app"
-            - "--host=0.0.0.0"
+            - "dramatiq"
+            - "app.main:broker"
           {{- if .Values.deployment.enableSecurityContext }}
           securityContext:
             {{- toYaml .Values.deployment.securityContext | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.deployment.image.repository }}-worker:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           envFrom:
             - secretRef:
                 name: {{ include "api.fullname" . }}-{{ .Values.deployment.secretName }}
-          ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /ping
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /ping
-              port: http
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}

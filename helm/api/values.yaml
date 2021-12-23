@@ -1,4 +1,5 @@
 deployment:
+  secretName: secret
   enableSecurityContext: true
   replicaCount: 1
   image:

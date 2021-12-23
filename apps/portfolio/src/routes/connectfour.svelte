@@ -14,12 +14,25 @@
 	const NEUTRUAL_COLOR = 'gray';
 	const MODE_ONE_PLAYER = '1 Player';
 	const MODE_TWO_PLAYER = '2 Players';
+	const DIFFICULTY_EASY = 3;
+	const DIFFICULTY_NORMAL = 4;
+	const DIFFICULTY_HARD = 5;
+	const GAME_PAUSED_MSGS = [
+		'I am plotting your defeat...',
+		'Please wait while the hamster wheel turns...',
+		'I can see the future, can you?',
+		'Minimax with alpha-beta pruning calculation in progress...',
+		'Please hold while I plan your ruination...'
+	];
 
 	let gamePaused = false;
+	let gameOver = false;
 	let currentColor = PLAYER_COLOR;
 	let winningMsg = '';
 	let board = initBoard(BOARD_WIDTH, BOARD_HEIGHT);
 	let mode = MODE_ONE_PLAYER;
+	let difficulty = DIFFICULTY_NORMAL;
+	let gamePausedMsg = 'Computer is thinking...';
 
 	function initBoard(xdim, ydim) {
 		let tempBoard = new Array(ydim);
@@ -35,6 +48,7 @@
 	function resetBoard() {
 		board = initBoard(BOARD_WIDTH, BOARD_HEIGHT);
 		gamePaused = false;
+		gameOver = false;
 		currentColor = PLAYER_COLOR;
 		winningMsg = '';
 	}
@@ -85,9 +99,9 @@
 		board[y][x].fillColor = color;
 
 		if (isWinningMove(color)) {
-			console.log(`${color} has won!`);
 			gamePaused = true;
-			winningMsg = `${color} won!`;
+			gameOver = true;
+			gamePausedMsg = `${color.toUpperCase()} won!`;
 			return;
 		}
 		if (currentColor === PLAYER_COLOR) {
@@ -102,9 +116,11 @@
 
 		const gameBoard = getGameBoard(BOARD_WIDTH, BOARD_HEIGHT);
 		const payload = {
-			board: gameBoard
+			board: gameBoard,
+			depth: difficulty
 		};
 		gamePaused = true;
+		gamePausedMsg = GAME_PAUSED_MSGS[Math.floor(Math.random() * GAME_PAUSED_MSGS.length)];
 		const connect_four_url = appSettings.API_BASE_URL + '/connectfour';
 		const response = await fetch(connect_four_url, {
 			method: 'POST',
@@ -120,9 +136,9 @@
 		dropPiece(data.column, color);
 
 		if (isWinningMove(color)) {
-			console.log(`${color} has won!`);
 			gamePaused = true;
-			winningMsg = `${color} won!`;
+			gameOver = true;
+			gamePausedMsg = `${color.toUpperCase()} won!`;
 			return;
 		}
 		if (currentColor === PLAYER_COLOR) {
@@ -238,11 +254,20 @@
 				}
 			}
 		}
-
 		return false;
 	}
 </script>
 
+{#if gamePaused}
+	<div class="fixed inset-x-0">
+		<div class="flex justify-center bg-neutral-focus rounded-2xl m-8 p-20">
+			<h1 class="text-4xl text-primary-content text-center">{gamePausedMsg}</h1>
+			{#if gameOver}
+				<button class="btn btn-primary mx-4" on:click={resetBoard}>Reset</button>
+			{/if}
+		</div>
+	</div>
+{/if}
 <div class="container mx-auto">
 	<div class="flex items-center justify-center my-8">
 		{#if winningMsg}
@@ -254,25 +279,56 @@
 			<circle cx="50" cy="50" r="50" stroke="black" stroke-width="3" fill={currentColor} />
 		</svg>
 	</div>
-	<div class="flex items-center justify-center mb-4">
-		<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode:</h2></div>
-		<div class="mx-2">
-			<button
-				class:btn-primary={mode === MODE_ONE_PLAYER}
-				class="btn"
-				on:click={() => {
-					mode = MODE_ONE_PLAYER;
-					resetBoard();
-				}}>{MODE_ONE_PLAYER}</button
-			>
-			<button
-				class:btn-primary={mode === MODE_TWO_PLAYER}
-				class="btn"
-				on:click={() => {
-					mode = MODE_TWO_PLAYER;
-					resetBoard();
-				}}>{MODE_TWO_PLAYER}</button
-			>
+	<div class="md:flex justify-center">
+		<div class="flex items-center justify-center mb-4">
+			<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Mode:</h2></div>
+			<div class="mx-2">
+				<button
+					class:btn-primary={mode === MODE_ONE_PLAYER}
+					class="btn"
+					on:click={() => {
+						mode = MODE_ONE_PLAYER;
+						resetBoard();
+					}}>{MODE_ONE_PLAYER}</button
+				>
+				<button
+					class:btn-primary={mode === MODE_TWO_PLAYER}
+					class="btn"
+					on:click={() => {
+						mode = MODE_TWO_PLAYER;
+						resetBoard();
+					}}>{MODE_TWO_PLAYER}</button
+				>
+			</div>
+		</div>
+		<div class="flex items-center justify-center mb-4">
+			<div><h2 class="mx-2 text-lg md:text-2xl text-secondary">Difficulty:</h2></div>
+			<div class="mx-2">
+				<button
+					class:btn-primary={difficulty === DIFFICULTY_EASY}
+					class="btn"
+					on:click={() => {
+						difficulty = DIFFICULTY_EASY;
+						resetBoard();
+					}}>Easy</button
+				>
+				<button
+					class:btn-primary={difficulty === DIFFICULTY_NORMAL}
+					class="btn"
+					on:click={() => {
+						difficulty = DIFFICULTY_NORMAL;
+						resetBoard();
+					}}>Normal</button
+				>
+				<button
+					class:btn-primary={difficulty === DIFFICULTY_HARD}
+					class="btn"
+					on:click={() => {
+						difficulty = DIFFICULTY_HARD;
+						resetBoard();
+					}}>Hard</button
+				>
+			</div>
 		</div>
 	</div>
 	<div
