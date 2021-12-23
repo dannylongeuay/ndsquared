@@ -2,6 +2,7 @@ deployment:
   secretName: secret-local
   image:
     repository: api-app
+    repositoryWorker: api-app-worker
 ingress:
   hosts:
     - host: api.localhost

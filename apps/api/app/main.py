@@ -28,7 +28,10 @@ REDIS_URL = os.getenv(
 )
 
 result_backend = RedisBackend(url=REDIS_URL)
-broker = RedisBroker(url=REDIS_URL)
+broker = RedisBroker(
+    url=REDIS_URL,
+    middleware=[],
+)
 broker.add_middleware(Results(backend=result_backend))
 dramatiq.set_broker(broker)
 

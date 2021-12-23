@@ -31,7 +31,7 @@ spec:
           securityContext:
             {{- toYaml .Values.deployment.securityContext | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.deployment.image.repository }}-worker:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.deployment.image.repositoryWorker }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           envFrom:
             - secretRef:
