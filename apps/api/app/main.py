@@ -93,8 +93,7 @@ async def connectfour(req: ConnectFourRequest):
         player_piece=req.player_piece,
         computer_piece=req.computer_piece,
         empty_piece=req.empty_piece,
-        # depth=req.depth,
-        depth=7,
+        depth=req.depth,
     )
     message = connectfour_best_move.send(connectfour_msg_payload.dict())
     result = None
