@@ -22,7 +22,26 @@
 		'Please wait while the hamster wheel turns...',
 		'I can see the future, can you?',
 		'Minimax with alpha-beta pruning calculation in progress...',
-		'Please hold while I plan your ruination...'
+		'Give me a minute I am plotting mass destruction...',
+		'Hold my pencil while I think...',
+		'NO NOT THERE!',
+		'It was not your turn, but fine...',
+		'Are you sure about that move?',
+		'But that is where I wanted to go!',
+		'Hold that thought...',
+		'Well this is going to be easy...',
+		'That move must have been an accident...',
+		'Gonna make a sandwich, be right back...',
+		'Give me a minute to think of some more clever lines...',
+		'I have thought of the perfect move, hold my beer...',
+		'Is that all you got?',
+		'I thought this was supposed to be a challenge...',
+		'Do not say I never gave you a chance',
+		'You really think that is your best option?',
+		'Anywhere but there!',
+		'I would not do that if I were you...',
+		'Did the hamster tell you to go there?',
+		'I have run out of clever remarks'
 	];
 
 	let gamePaused = false;
@@ -260,10 +279,21 @@
 
 {#if gamePaused}
 	<div class="fixed inset-x-0">
-		<div class="flex justify-center bg-neutral-focus rounded-2xl m-8 p-20">
-			<h1 class="text-4xl text-primary-content text-center">{gamePausedMsg}</h1>
+		<div class="flex justify-center items-center bg-neutral bg-opacity-95 rounded-2xl mx-4 py-4">
+			<h1 class="text-md md:text-4xl text-neutral-content text-center">{gamePausedMsg}</h1>
 			{#if gameOver}
 				<button class="btn btn-primary mx-4" on:click={resetBoard}>Reset</button>
+			{:else}
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="currentColor"
+					class="mx-4 w-10 h-10"
+					viewBox="0 0 16 16"
+				>
+					<path
+						d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2h-7z"
+					/>
+				</svg>
 			{/if}
 		</div>
 	</div>
