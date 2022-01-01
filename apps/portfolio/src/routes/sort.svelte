@@ -1,6 +1,8 @@
 <script>
 	import { flip } from 'svelte/animate';
-	import { quintOut } from 'svelte/easing';
+
+	const primaryBorderColorClass = 'border-yellow-300';
+	const secondaryBorderColorClass = 'border-cyan-400';
 
 	let inPlace = [
 		{
@@ -59,6 +61,8 @@
 		}
 	];
 
+	let highlightClasses = {};
+
 	function swap(arr, i, j) {
 		// console.log(`swapped ${arr[i].val} with ${arr[j].val}`);
 		[arr[i], arr[j]] = [arr[j], arr[i]];
@@ -73,6 +77,9 @@
 			for (let j = 0; j < arr.length - 1; j++) {
 				if (arr[j].val > arr[j + 1].val) {
 					swap(arr, j, j + 1);
+					highlightClasses = {};
+					highlightClasses[arr[j + 1].val] = `border-2 ${primaryBorderColorClass}`;
+					highlightClasses[arr[j].val] = `border-2 ${secondaryBorderColorClass}`;
 					yield arr;
 				}
 			}
@@ -90,6 +97,9 @@
 			}
 			if (arr[i].val !== arr[minIndex].val) {
 				swap(arr, i, minIndex);
+				highlightClasses = {};
+				highlightClasses[arr[i].val] = `border-2 ${primaryBorderColorClass}`;
+				highlightClasses[arr[minIndex].val] = `border-2 ${secondaryBorderColorClass}`;
 				yield arr;
 			}
 		}
@@ -101,8 +111,11 @@
 			const key = arr[i];
 			let j = i - 1;
 			let swapped = false;
+			highlightClasses = {};
 			while (j >= 0 && key.val < arr[j].val) {
 				swap(arr, j + 1, j);
+				highlightClasses[arr[j].val] = `border-2 ${primaryBorderColorClass}`;
+				highlightClasses[arr[j + 1].val] = `border-2 ${secondaryBorderColorClass}`;
 				j -= 1;
 				swapped = true;
 			}
@@ -115,18 +128,53 @@
 
 	let selectedAlgorithm = bubbleSort;
 	let selectedArr = inPlace;
+	let selectedInterval = 1000;
+
 	const selectedMap = {
 		bubbleSort: {
 			alg: bubbleSort,
-			arr: inPlace
+			arr: inPlace,
+			interval: 1000,
+			legendInfo: [
+				{
+					classes: `border-4 ${primaryBorderColorClass}`,
+					text: 'Lower Swap'
+				},
+				{
+					classes: `border-4 ${secondaryBorderColorClass}`,
+					text: 'Upper Swap'
+				}
+			]
 		},
 		selectionSort: {
 			alg: selectionSort,
-			arr: inPlace
+			arr: inPlace,
+			interval: 2000,
+			legendInfo: [
+				{
+					classes: `border-4 ${primaryBorderColorClass}`,
+					text: 'Min Element'
+				},
+				{
+					classes: `border-4 ${secondaryBorderColorClass}`,
+					text: 'Swap Element'
+				}
+			]
 		},
 		insertionSort: {
 			alg: insertionSort,
-			arr: inPlace
+			arr: inPlace,
+			interval: 2000,
+			legendInfo: [
+				{
+					classes: `border-4 ${primaryBorderColorClass}`,
+					text: 'Key Element'
+				},
+				{
+					classes: `border-4 ${secondaryBorderColorClass}`,
+					text: 'Shift Element(s)'
+				}
+			]
 		}
 	};
 
@@ -137,9 +185,11 @@
 		let next = sortIter.next();
 		while (!next.done) {
 			selectedArr = next.value;
-			await sleep(1000);
+			await sleep(selectedInterval);
 			next = sortIter.next();
 		}
+		highlightClasses = {};
+		selectedArr = next.value;
 	};
 
 	const shuffle = () => {
@@ -153,6 +203,14 @@
 	const select = () => {
 		selectedAlgorithm = selectedMap[selected].alg;
 		selectedArr = selectedMap[selected].arr;
+		selectedInterval = selectedMap[selected].interval;
+	};
+
+	const getHighlightClasses = (val) => {
+		if (val in highlightClasses) {
+			return highlightClasses[val];
+		}
+		return '';
 	};
 </script>
 
@@ -174,11 +232,28 @@
 <div class="flex items-end justify-center overflow-x-auto">
 	{#each selectedArr as item (item)}
 		<div animate:flip>
-			<div
-				class="{item.bgColor} {item.height} {item.textColor} m-1 p-1 md:m-2 md:p-4 text-xl font-bold"
-			>
-				{item.val}
+			<div class={getHighlightClasses(item.val)}>
+				<div
+					class="{item.bgColor} {item.height} {item.textColor} m-1 p-1 md:m-2 md:p-4 text-xl font-bold"
+				>
+					{item.val}
+				</div>
 			</div>
 		</div>
 	{/each}
 </div>
+{#if selected}
+	<div class="flex justify-center">
+		<div class="flex-col px-4 m-4 border-2 rounded-lg bg-base-200 border-secondary">
+			<h1 class="py-4 text-2xl text-center text-primary">Legend</h1>
+			<div class="flex py-4 justify-evenly">
+				{#each selectedMap[selected].legendInfo as info}
+					<div class="flex flex-col items-center">
+						<div class="w-6 h-20 {info.classes}" />
+						<h3 class="p-2 text-base-content">{info.text}</h3>
+					</div>
+				{/each}
+			</div>
+		</div>
+	</div>
+{/if}
