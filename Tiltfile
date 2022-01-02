@@ -24,7 +24,7 @@ helm_remote('sealed-secrets',
 docker_build(
   'portfolio-app',
   './apps/portfolio/',
-  entrypoint="npm run tilt",
+  entrypoint="VITE_SERVER_HMR_PORT=8000 npm run tilt",
   live_update=[
     sync('./apps/portfolio/', '/app')
   ],
@@ -122,6 +122,9 @@ k8s_resource(
   objects=[
     "dev-portfolio:ingress",
   ],
+  resource_deps=[
+    'core-sealed-secrets',
+  ],
 )
 
 k8s_resource(
@@ -132,17 +135,23 @@ k8s_resource(
     "dev-api:ingress",
     "dev-api-secret-local:sealedsecret",
   ],
+  resource_deps=[
+    'core-sealed-secrets',
+  ],
 )
 
 k8s_resource(
   "dev-api-worker",
   labels=["api"],
+  resource_deps=[
+    'core-sealed-secrets',
+  ],
 )
 
 # docker_build(
 #   'wedding-app',
 #   './apps/wedding/',
-#   entrypoint="npm run tilt",
+#   entrypoint="VITE_SERVER_HMR_PORT=8000 npm run tilt",
 #   live_update=[
 #     sync('./apps/wedding/', '/app')
 #   ],
