@@ -5,8 +5,9 @@ import logging
 
 from asyncio import sleep
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Security, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_auth0 import Auth0, Auth0User
 from pydantic import BaseModel
 from dramatiq.brokers.redis import RedisBroker
 from dramatiq.results.backends import RedisBackend
@@ -20,6 +21,15 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
     allow_methods=['*'],
+)
+AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN', 'notarealauth0domain')
+AUTH0_API_AUDIENCE = os.getenv('AUTH0_API_AUDIENCE',
+                               'notarealauth0apiaudience')
+
+auth = Auth0(
+    domain=AUTH0_DOMAIN,
+    api_audience=AUTH0_API_AUDIENCE,
+    scopes={'read:connectfour': ''},
 )
 
 REDIS_URL = os.getenv(
@@ -83,6 +93,12 @@ class ConnectFourMessagePayload(BaseModel):
 @app.get('/ping')
 def pong():
     return {'message': 'pong'}
+
+
+@app.get('/private', dependencies=[Depends(auth.implicit_scheme)])
+def private(user: Auth0User = Security(auth.get_user,
+                                       scopes=['read:connectfour'])):
+    return {"message": f"{user}"}
 
 
 @app.post('/connectfour')

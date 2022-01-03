@@ -1,5 +1,4 @@
 deployment:
-  secretName: secret-local
   image:
     repository: api-app
     repositoryWorker: api-app-worker

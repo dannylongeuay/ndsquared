@@ -9,6 +9,7 @@ python = "^3.9"
 fastapi = "^0.70.0"
 uvicorn = "^0.15.0"
 dramatiq = {extras = ["redis", "watch"], version = "^1.12.1"}
+fastapi-auth0 = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 yapf = "^0.31.0"

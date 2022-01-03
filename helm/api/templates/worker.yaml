@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           envFrom:
             - secretRef:
-                name: {{ include "api.fullname" . }}-{{ .Values.deployment.secretName }}
+                name: {{ .Values.deployment.secretName }}
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}
           volumeMounts:
