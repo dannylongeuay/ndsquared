@@ -53,6 +53,7 @@ k8s_yaml(
   [
     'sealed/local/key.yaml',
     'sealed/local/api-sealed.yaml',
+    'sealed/local/portfolio-sealed.yaml',
   ]
 )
 
@@ -121,6 +122,7 @@ k8s_resource(
   labels=["portfolio"],
   objects=[
     "dev-portfolio:ingress",
+    "portfolio-secret:sealedsecret",
   ],
   resource_deps=[
     'core-sealed-secrets',

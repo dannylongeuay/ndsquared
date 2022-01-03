@@ -33,6 +33,9 @@ spec:
           {{- end }}
           image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.deployment.secretName }}
           ports:
             - name: http
               containerPort: 3000

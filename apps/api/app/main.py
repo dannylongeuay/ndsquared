@@ -21,6 +21,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
     allow_methods=['*'],
+    allow_headers=['*'],
 )
 AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN', 'notarealauth0domain')
 AUTH0_API_AUDIENCE = os.getenv('AUTH0_API_AUDIENCE',
@@ -29,7 +30,9 @@ AUTH0_API_AUDIENCE = os.getenv('AUTH0_API_AUDIENCE',
 auth = Auth0(
     domain=AUTH0_DOMAIN,
     api_audience=AUTH0_API_AUDIENCE,
-    scopes={'read:connectfour': ''},
+    scopes={
+        'read:connectfour': '',
+    },
 )
 
 REDIS_URL = os.getenv(
@@ -95,14 +98,11 @@ def pong():
     return {'message': 'pong'}
 
 
-@app.get('/private', dependencies=[Depends(auth.implicit_scheme)])
-def private(user: Auth0User = Security(auth.get_user,
-                                       scopes=['read:connectfour'])):
-    return {"message": f"{user}"}
-
-
-@app.post('/connectfour')
-async def connectfour(req: ConnectFourRequest):
+@app.post('/connectfour', dependencies=[Depends(auth.implicit_scheme)])
+async def connectfour(
+        req: ConnectFourRequest,
+        _: Auth0User = Security(auth.get_user, scopes=['read:connectfour']),
+):
     height = len(req.board)
     width = len(req.board[0])
     connectfour_msg_payload = ConnectFourMessagePayload(
