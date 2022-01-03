@@ -1,0 +1,25 @@
+name: Sealed CD
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/sealed-cd.yaml"
+      - "sealed/prod/**"
+jobs:
+  sealed-deploy:
+    name: Deploy SealedSecrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/setup-kubectl@v1
+        with:
+          version: v1.22.2
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ndsquared-prod-sf03
+      - name: Apply SealedSecrets
+        run: kubectl apply -f sealed/prod/

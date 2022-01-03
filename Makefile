@@ -39,3 +39,11 @@ up: bootstrap ## Run a local development environment
 .PHONY: down
 down: ## Shutdown local development and free those resources
 	tilt down --context k3d-$(PROJECT_NAME)
+
+.PHONY: generic-secret
+generic-secret: ## Create a generic secret to be used in conjunction with make seal-secret
+	kubectl create secret generic secret --namespace changeme --dry-run=client --from-literal="foo=bar" -o yaml > secret.yaml
+
+.PHONY: seal-secret
+seal-secret: ## Seal a generic secret
+	kubeseal --controller-name core-sealed-secrets --controller-namespace core -o yaml <secret.yaml >sealedsecret.yaml

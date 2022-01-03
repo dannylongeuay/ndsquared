@@ -1,5 +1,5 @@
 deployment:
-  secretName: secret
+  secretName: api-secret
   enableSecurityContext: true
   replicaCount: 1
   image:

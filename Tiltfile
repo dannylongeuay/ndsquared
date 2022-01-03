@@ -49,8 +49,13 @@ docker_build(
   ],
 )
 
-k8s_yaml('helm/sealed-secrets-key-local.yaml')
-k8s_yaml('helm/api-secret-local.yaml')
+k8s_yaml(
+  [
+    'sealed/local/key.yaml',
+    'sealed/local/api-sealed.yaml',
+    'sealed/local/portfolio-sealed.yaml',
+  ]
+)
 
 k8s_yaml(
   helm(
@@ -64,8 +69,7 @@ k8s_yaml(
   )
 )
 
-# Filter out production sealed secrets
-sealedsecret_yaml, rest = filter_yaml(
+k8s_yaml(
   helm(
     "helm/api/",
     name="dev",
@@ -74,11 +78,8 @@ sealedsecret_yaml, rest = filter_yaml(
       "helm/values.common.local.yaml",
       "helm/values.api.local.yaml",
     ],
-  ),
-  kind='SealedSecret'
+  )
 )
-
-k8s_yaml(rest)
 
 k8s_resource(
   "redis-master",
@@ -121,6 +122,7 @@ k8s_resource(
   labels=["portfolio"],
   objects=[
     "dev-portfolio:ingress",
+    "portfolio-secret:sealedsecret",
   ],
   resource_deps=[
     'core-sealed-secrets',
@@ -133,7 +135,7 @@ k8s_resource(
   labels=["api"],
   objects=[
     "dev-api:ingress",
-    "dev-api-secret-local:sealedsecret",
+    "api-secret:sealedsecret",
   ],
   resource_deps=[
     'core-sealed-secrets',
@@ -145,6 +147,7 @@ k8s_resource(
   labels=["api"],
   resource_deps=[
     'core-sealed-secrets',
+    'redis-replicas',
   ],
 )
 

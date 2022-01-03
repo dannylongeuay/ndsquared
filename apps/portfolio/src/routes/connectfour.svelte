@@ -1,7 +1,26 @@
 <script>
 	import { appSettingsStore } from '$lib/stores/appsettings';
+	import { onMount } from 'svelte';
 
 	let appSettings;
+	let accessToken;
+
+	onMount(async () => {
+		const auth0_token_url = `https://${appSettings.AUTH0_DOMAIN}/oauth/token`;
+		const headers = { 'content-type': 'application/json' };
+		const tokenResponse = await fetch(auth0_token_url, {
+			method: 'POST',
+			headers,
+			body: JSON.stringify({
+				client_id: appSettings.AUTH0_CLIENT_ID,
+				client_secret: appSettings.AUTH0_CLIENT_SECRET,
+				audience: appSettings.AUTH0_API_AUDIENCE,
+				grant_type: 'client_credentials'
+			})
+		});
+		const tokenData = await tokenResponse.json();
+		accessToken = tokenData.access_token;
+	});
 
 	appSettingsStore.subscribe((value) => {
 		appSettings = value;
@@ -141,11 +160,10 @@
 		gamePaused = true;
 		gamePausedMsg = GAME_PAUSED_MSGS[Math.floor(Math.random() * GAME_PAUSED_MSGS.length)];
 		const connect_four_url = appSettings.API_BASE_URL + '/connectfour';
+		const headers = { 'content-type': 'application/json', authorization: `Bearer ${accessToken}` };
 		const response = await fetch(connect_four_url, {
 			method: 'POST',
-			headers: {
-				'Content-type': 'application/json'
-			},
+			headers,
 			body: JSON.stringify(payload)
 		});
 		const data = await response.json();
