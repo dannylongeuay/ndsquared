@@ -5,9 +5,9 @@ import logging
 
 from asyncio import sleep
 from typing import Optional
-from fastapi import FastAPI, Security, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi_auth0 import Auth0, Auth0User
+from fastapi_auth0 import Auth0
 from pydantic import BaseModel
 from dramatiq.brokers.redis import RedisBroker
 from dramatiq.results.backends import RedisBackend
@@ -98,11 +98,8 @@ def pong():
     return {'message': 'pong'}
 
 
-@app.post('/connectfour', dependencies=[Depends(auth.implicit_scheme)])
-async def connectfour(
-        req: ConnectFourRequest,
-        _: Auth0User = Security(auth.get_user, scopes=['read:connectfour']),
-):
+@app.post('/connectfour')
+async def connectfour(req: ConnectFourRequest):
     height = len(req.board)
     width = len(req.board[0])
     connectfour_msg_payload = ConnectFourMessagePayload(
