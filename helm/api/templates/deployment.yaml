@@ -36,7 +36,11 @@ spec:
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           envFrom:
             - secretRef:
-                name: {{ .Values.deployment.secretName }}
+                name: {{ include "api.fullname" . }}
+            {{- if .Values.enableFakeSecrets }}
+            - secretRef:
+                name: {{ include "api.fullname" . }}-fake
+            {{- end }}
           ports:
             - name: http
               containerPort: 8000

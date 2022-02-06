@@ -1,3 +1,4 @@
+enableFakeSecrets: true
 deployment:
   enableSecurityContext: false
 ingress:

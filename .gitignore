@@ -10,3 +10,4 @@ tilt_modules
 __pycache__
 secret.yaml
 sealedsecret.yaml
+gitlab-secret.yaml

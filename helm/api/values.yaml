@@ -1,3 +1,4 @@
+enableFakeSecrets: false
 deployment:
   secretName: api-secret
   enableSecurityContext: true

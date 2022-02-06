@@ -22,7 +22,7 @@ k8s-bootstrap: ## Create a Kubernetes cluster for local development
 .PHONY: kubectl-bootstrap
 kubectl-bootstrap: ## Update used helm repositories
 	kubectl create namespace ingress-nginx || true
-	kubectl create namespace ndsquared || true
+	kubectl create namespace local || true
 
 .PHONY: bootstrap
 bootstrap: asdf-bootstrap k8s-bootstrap kubectl-bootstrap ## Perform all bootstrapping to start your project
@@ -40,10 +40,6 @@ up: bootstrap ## Run a local development environment
 down: ## Shutdown local development and free those resources
 	tilt down --context k3d-$(PROJECT_NAME)
 
-.PHONY: generic-secret
-generic-secret: ## Create a generic secret to be used in conjunction with make seal-secret
-	kubectl create secret generic secret --namespace changeme --dry-run=client --from-literal="foo=bar" -o yaml > secret.yaml
-
-.PHONY: seal-secret
-seal-secret: ## Seal a generic secret
-	kubeseal --controller-name core-sealed-secrets --controller-namespace core -o yaml <secret.yaml >sealedsecret.yaml
+.PHONY: gitlab-secret
+gitlab-secret: ## Create a gitlab secret to be used with the external secrets store
+	kubectl create secret generic gitlab-secret --namespace local --dry-run=client --from-literal="token=bar" -o yaml > gitlab-secret.yaml

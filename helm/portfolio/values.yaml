@@ -1,6 +1,6 @@
+enableFakeSecrets: false
 deployment:
   apiBaseUrl: "https://api.ndsquared.net"
-  secretName: portfolio-secret
   enableSecurityContext: true
   replicaCount: 1
   image:
