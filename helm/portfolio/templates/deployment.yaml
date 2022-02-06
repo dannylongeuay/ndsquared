@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           envFrom:
             - secretRef:
-                name: {{ .Values.deployment.secretName }}
+                name: {{ include "portfolio.fullname" . }}
           ports:
             - name: http
               containerPort: 3000

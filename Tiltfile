@@ -3,22 +3,19 @@ load('ext://helm_remote', 'helm_remote')
 helm_remote('redis',
             repo_name='redis',
             repo_url='https://charts.bitnami.com/bitnami',
-            namespace='ndsquared',
+            namespace='local',
             set=[
               'global.redis.password=supersecurepassword',
             ],
 )
 
-helm_remote('sealed-secrets',
+helm_remote('external-secrets',
             release_name='core',
-            repo_name='sealed-secrets',
-            repo_url='https://bitnami-labs.github.io/sealed-secrets',
+            repo_name='external-secrets',
+            repo_url='https://charts.external-secrets.io',
             namespace='core',
             create_namespace=True,
-            set=[
-              'secretName=sealed-secrets-key-local',
-            ],
-            version='2.0.0',
+            version='0.4.1',
 )
 
 docker_build(
@@ -51,17 +48,15 @@ docker_build(
 
 k8s_yaml(
   [
-    'sealed/local/key.yaml',
-    'sealed/local/api-sealed.yaml',
-    'sealed/local/portfolio-sealed.yaml',
+    'gitlab-secret.yaml',
   ]
 )
 
 k8s_yaml(
   helm(
     "helm/portfolio/",
-    name="dev",
-    namespace="ndsquared",
+    name="local",
+    namespace="local",
     values=[
       "helm/values.common.local.yaml",
       "helm/values.portfolio.local.yaml",
@@ -72,8 +67,8 @@ k8s_yaml(
 k8s_yaml(
   helm(
     "helm/api/",
-    name="dev",
-    namespace="ndsquared",
+    name="local",
+    namespace="local",
     values=[
       "helm/values.common.local.yaml",
       "helm/values.api.local.yaml",
@@ -99,54 +94,59 @@ k8s_resource(
 )
 
 k8s_resource(
-  "core-sealed-secrets",
-  labels=["sealed-secrets"],
+  "core-external-secrets",
+  labels=["secrets"],
   objects=[
     "core:namespace",
-    "sealedsecrets.bitnami.com:customresourcedefinition:default",
-    "sealedsecrets.bitnami.com:customresourcedefinition:core",
-    "core-sealed-secrets:serviceaccount",
-    "core-sealed-secrets-key-admin:role",
-    "core-sealed-secrets-service-proxier:role",
-    "secrets-unsealer:clusterrole",
-    "core-sealed-secrets-key-admin:rolebinding",
-    "core-sealed-secrets-service-proxier:rolebinding",
-    "core-sealed-secrets:clusterrolebinding",
-    "sealed-secrets-key-local:secret",
-  ],
+    "clustersecretstores.external-secrets.io:customresourcedefinition",
+    "externalsecrets.external-secrets.io:customresourcedefinition",
+    "secretstores.external-secrets.io:customresourcedefinition",
+    "core-external-secrets:serviceaccount",
+    "core-external-secrets-leaderelection:role",
+    "core-external-secrets-controller:clusterrole",
+    "core-external-secrets-view:clusterrole",
+    "core-external-secrets-edit:clusterrole",
+    "core-external-secrets-leaderelection:rolebinding",
+    "core-external-secrets-controller:clusterrolebinding",
+    "gitlab-secret:secret",
+  ]
 )
 
 k8s_resource(
-  "dev-portfolio",
+  "local-portfolio",
   links=["http://localhost:8000/"],
   labels=["portfolio"],
   objects=[
-    "dev-portfolio:ingress",
-    "portfolio-secret:sealedsecret",
+    "local-portfolio:ingress",
+    "local-portfolio:externalsecret",
+    "local-portfolio:secretstore",
   ],
   resource_deps=[
-    'core-sealed-secrets',
+    'core-external-secrets',
   ],
 )
 
 k8s_resource(
-  "dev-api",
+  "local-api",
   links=["http://api.localhost:8000/"],
   labels=["api"],
   objects=[
-    "dev-api:ingress",
-    "api-secret:sealedsecret",
+    "local-api:ingress",
+    "local-api:externalsecret",
+    "local-api:secretstore",
+    "local-api-fake:externalsecret",
+    "local-api-fake:secretstore",
   ],
   resource_deps=[
-    'core-sealed-secrets',
+    'core-external-secrets',
   ],
 )
 
 k8s_resource(
-  "dev-api-worker",
+  "local-api-worker",
   labels=["api"],
   resource_deps=[
-    'core-sealed-secrets',
+    'core-external-secrets',
     'redis-replicas',
   ],
 )
@@ -163,7 +163,7 @@ k8s_resource(
 # k8s_yaml(
 #   helm(
 #     "helm/wedding/",
-#     name="dev",
+#     name="local",
 #     namespace="ndsquared",
 #     values=[
 #       "helm/values.common.local.yaml",
@@ -173,10 +173,10 @@ k8s_resource(
 # )
 
 # k8s_resource(
-#   "dev-wedding",
+#   "local-wedding",
 #   links=["http://wedding.localhost:8000/"],
 #   labels=["wedding"],
 #   objects=[
-#     "dev-wedding:ingress",
+#     "local-wedding:ingress",
 #   ],
 # )
