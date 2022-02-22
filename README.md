@@ -1,35 +1,55 @@
 # NDSquared
 
-Personal portfolio site
+This repo contains the collection of application code and corresponding helm charts I use in my [personal Kubernetes cluster](https://github.com/dannylongeuay/do-infra).
 
-www.ndsquared.net
+**Applications**:
 
-## Secrets
+- [Portfolio](https://www.ndsquared.net)
+  - [Python Backend](https://api.ndsquared.net/docs)
+  - TODO: Golang Backend
+- [Wedding Gallery](https://wedding.ndsquared.net)
 
-Secrets are managed with [SealedSecrets](https://github.com/bitnami-labs/sealed-secrets).
+## Deployment
 
-**New secret creation:**
+Applications are deployed to the Kubernetes cluster using [Helm](https://helm.sh/). This is automated via [GitHub Actions](https://github.com/features/actions).
 
-First create a generic kubernetes secret. Make sure to update the `name` and `namespace` accordingly.
+## Architecture
+
+The following is a brief diagram of the application components:
+
+```mermaid
+flowchart TB
+  subgraph Kubernetes Cluster
+    subgraph Portfolio
+      Frontend1[Javascript Frontend]-->PyAPI[Python Backend]
+      PyAPI<-->Redis
+      Frontend1-->GoAPI[TODO: Golang Backend]
+    end
+    subgraph Wedding Gallery
+      Frontend2[Javascript Frontend]
+    end
+  end
+```
+
+## Local Development
+
+Local development utilizes a tool called [Tilt](https://tilt.dev/), a microservice development environment for engineers that deploy to Kubernetes.
+
+### Requirements
+
+- [ASDF-VM](https://asdf-vm.com/)
+- [Docker](https://www.docker.com/)
+
+### Make targets
 
 ```
-make generic-secret
+❯ make
+help                           View help information
+asdf-bootstrap                 Install all tools through asdf-vm
+kubectl-bootstrap              Create namespaces in k3d cluster
+bootstrap                      Perform all bootstrapping required for local development
+clean                          Destroy local development environment
+up                             Run local development environment
+down                           Stop local development environment
+gitlab-secret                  Create a gitlab secret to be used with the external secrets store
 ```
-
-Next `base64` encode secrets and copy them into the generated generic secret.
-
-```
-echo 'secretvaluehere' | base64 | xclip -selection clipboard
-```
-
-Lastly, convert the generic secret into a sealed secret, which is safe to be version controlled.
-
-```
-make seal-secret
-```
-
-**Update existing secrets:**
-
-This process is the same as new secret creation with the additional step of copying secrets from the generated `sealedsecret.yaml` into an existing sealed secret.
-
-> Ensure the generic secret's `name` and `namespace` are the same as existing sealed secret.
