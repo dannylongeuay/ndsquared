@@ -1,0 +1,40 @@
+deployment:
+  enableSecurityContext: true
+  replicaCount: 1
+  image:
+    repository: dannylongeuay/ndsq-goapi
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
+  podAnnotations: {}
+  podSecurityContext:
+    fsGroup: 2000
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+  resources:
+    limits:
+      cpu: 1
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+service:
+  type: ClusterIP
+  port: 5000
+
+ingress:
+  enableTls: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: goapi.ndsquared.net
+      paths:
+        - path: /
+          pathType: Prefix
