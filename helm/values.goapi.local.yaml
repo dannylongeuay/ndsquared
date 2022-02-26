@@ -10,3 +10,4 @@ ingress:
 
 configmap:
   goapiHost: goapi.localhost:8000
+  ginMode: debug

@@ -34,7 +34,7 @@ clean: ## Destroy local development environment
 
 .PHONY: up
 up: bootstrap ## Run local development environment
-	tilt up --context k3d-$(PROJECT_NAME) --hud
+	tilt up --context k3d-$(PROJECT_NAME)
 
 .PHONY: down
 down: ## Stop local development environment

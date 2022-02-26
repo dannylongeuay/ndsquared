@@ -35,7 +35,7 @@ type ConnectfourResponse struct {
 // @Description  Submit a connectfour board state and return the best move at the depth provided
 // @Tags         solvers
 // @Accept       json
-// @Param        body body   main.ConnectFourRequest true "Board State"
+// @Param        body  body  main.ConnectFourRequest  true  "Board State"
 // @Produce      json
 // @Success      200  {object}  main.ConnectfourResponse
 // @Failure      400  {object}  main.ErrorReponse

@@ -5,3 +5,4 @@ metadata:
   labels: {{- include "goapi.labels" . | nindent 4}}
 data:
   GOAPI_HOST: {{.Values.configmap.goapiHost}}
+  GIN_MODE: {{.Values.configmap.ginMode}}

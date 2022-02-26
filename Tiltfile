@@ -47,7 +47,7 @@ docker_build(
   ],
 )
 
-compile_cmd = 'cd apps/goapi && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/goapi src/* && swag init -d src/ -ot go'
+compile_cmd = 'cd apps/goapi && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/goapi ndsquared/goapi/src && swag init -d src/ -ot go'
 
 local_resource(
   'goapi-compile',
@@ -59,9 +59,10 @@ local_resource(
   ],
 )
 
-docker_build_with_restart(
+docker_build(
   'goapi-app',
   './apps/goapi/',
+  dockerfile='./apps/goapi/tilt.dockerfile',
   entrypoint=['/app/build/goapi'],
   only=[
     './build',
