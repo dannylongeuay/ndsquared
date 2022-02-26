@@ -6,18 +6,11 @@ on:
       - "apps/goapi/**"
       - "helm/goapi/**"
 jobs:
-  goapi-ci:
+  goapi-diff:
     name: GOAPI Diff
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: "^1.17.2"
-      - name: Run Tests
-        run: |
-          go mod download
-          go test -v ndsquared/goapi/src
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -44,6 +37,19 @@ jobs:
             ```
             ${{ env.COMMAND_OUTPUT }}
             ```
+  goapi-tests:
+    name: GOAPI Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "^1.17.2"
+      - name: Run Tests
+        run: |
+          go mod download
+          go test -v ndsquared/goapi/src
+  goapi-lint:
     name: GOAPI Lint
     runs-on: ubuntu-latest
     steps:
