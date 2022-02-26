@@ -83,9 +83,8 @@ func main() {
 	})
 	router.POST("/connectfour", connectfourRoute)
 
-	router.Run("0.0.0.0:5555")
-	// err = router.Run("0.0.0.0:5555")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
+	err = router.Run("0.0.0.0:5555")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
