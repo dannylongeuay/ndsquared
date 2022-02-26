@@ -55,9 +55,6 @@ jobs:
   goapi-lint:
     name: GOAPI Lint
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./apps/goapi
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -65,5 +62,6 @@ jobs:
           go-version: "^1.17.2"
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
+        working-directory: ./apps/goapi
         with:
           version: v1.44.2
