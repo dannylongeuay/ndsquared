@@ -1,0 +1,12 @@
+deployment:
+  image:
+    repository: goapi-app
+ingress:
+  hosts:
+    - host: goapi.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+
+configmap:
+  goapiHost: goapi.localhost:8000

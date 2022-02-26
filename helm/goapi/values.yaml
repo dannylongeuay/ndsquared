@@ -38,3 +38,6 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+
+configmap:
+  goapiHost: goapi.ndsquared.net

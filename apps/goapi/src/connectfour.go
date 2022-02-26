@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Board struct {
@@ -11,7 +12,7 @@ type Board struct {
 	emptyPiece  string
 }
 
-func createBoard(boardRows [][]string, playerPiece string, oppPiece string, emptyPiece string) Board {
+func createBoard(boardRows []string, playerPiece string, oppPiece string, emptyPiece string) Board {
 	b := Board{
 		playerPiece: playerPiece,
 		oppPiece:    oppPiece,
@@ -19,7 +20,7 @@ func createBoard(boardRows [][]string, playerPiece string, oppPiece string, empt
 	}
 	b.cells = make([][]string, len(boardRows[0]))
 	for i := range boardRows {
-		b.cells[i] = boardRows[i]
+		b.cells[i] = strings.Split(boardRows[i], "")
 	}
 	return b
 }

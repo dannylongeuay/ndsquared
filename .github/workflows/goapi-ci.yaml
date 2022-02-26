@@ -1,0 +1,39 @@
+name: GOAPI CI
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/goapi-ci.yaml"
+      - "apps/goapi/**"
+      - "helm/goapi/**"
+jobs:
+  goapi-diff:
+    name: GOAPI Diff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ndsquared-prod-sf03
+      - uses: azure/setup-helm@v1
+        with:
+          version: v3.7.1
+      - run: helm plugin install https://github.com/databus23/helm-diff
+        name: Install helm diff plugin
+      - name: Run helm diff
+        run: |
+          COMMAND_OUTPUT=$(helm diff upgrade goapi helm/goapi/ --install --namespace ndsq --no-color)
+          echo "COMMAND_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "$COMMAND_OUTPUT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: goapi-diff
+          hide_and_recreate: true
+          message: |
+            ## Helm `GOAPI` Diff:
+            ```
+            ${{ env.COMMAND_OUTPUT }}
+            ```

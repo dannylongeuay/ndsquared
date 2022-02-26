@@ -42,4 +42,4 @@ down: ## Stop local development environment
 
 .PHONY: gitlab-secret
 gitlab-secret: ## Create a gitlab secret to be used with the external secrets store
-	kubectl create secret generic gitlab-secret --namespace local --dry-run=client --from-literal="token=bar" -o yaml > gitlab-secret.yaml
+	cp gitlab-secret.example.yaml gitlab-secret.yaml

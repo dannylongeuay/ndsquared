@@ -1,4 +1,5 @@
 load('ext://helm_remote', 'helm_remote')
+load('ext://restart_process', 'docker_build_with_restart')
 
 helm_remote('redis',
             repo_name='redis',
@@ -46,6 +47,30 @@ docker_build(
   ],
 )
 
+compile_cmd = 'cd apps/goapi && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/goapi src/* && swag init -d src/ -ot go'
+
+local_resource(
+  'goapi-compile',
+  compile_cmd,
+  deps=[
+    './apps/goapi/src',
+    './apps/goapi/go.mod',
+    './apps/goapi/go.sum',
+  ],
+)
+
+docker_build_with_restart(
+  'goapi-app',
+  './apps/goapi/',
+  entrypoint=['/app/build/goapi'],
+  only=[
+    './build',
+  ],
+  live_update=[
+    sync('./apps/goapi/build', '/app/build'),
+  ],
+)
+
 k8s_yaml(
   [
     'gitlab-secret.yaml',
@@ -72,6 +97,18 @@ k8s_yaml(
     values=[
       "helm/values.common.local.yaml",
       "helm/values.api.local.yaml",
+    ],
+  )
+)
+
+k8s_yaml(
+  helm(
+    "helm/goapi/",
+    name="local",
+    namespace="local",
+    values=[
+      "helm/values.common.local.yaml",
+      "helm/values.goapi.local.yaml",
     ],
   )
 )
@@ -128,7 +165,7 @@ k8s_resource(
 
 k8s_resource(
   "local-api",
-  links=["http://api.localhost:8000/"],
+  links=["http://api.localhost:8000/docs"],
   labels=["api"],
   objects=[
     "local-api:ingress",
@@ -139,6 +176,16 @@ k8s_resource(
   ],
   resource_deps=[
     'core-external-secrets',
+  ],
+)
+
+k8s_resource(
+  "local-goapi",
+  links=["http://goapi.localhost:8000/docs"],
+  labels=["api"],
+  objects=[
+    "local-goapi:ingress",
+    "local-goapi:configmap",
   ],
 )
 
