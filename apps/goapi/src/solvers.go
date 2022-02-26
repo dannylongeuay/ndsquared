@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 )
@@ -49,7 +50,11 @@ func minimax(board Board, depth int, alpha int, beta int, maximizingPlayer strin
 	returnCol := validMoves[rand.Intn(len(validMoves))]
 	for _, col := range validMoves {
 		newBoard := board.copyBoard()
-		newBoard.dropPiece(maximizingPlayer, col)
+		err := newBoard.dropPiece(maximizingPlayer, col)
+		if err != nil {
+			fmt.Println(err.Error())
+			return -1, -1
+		}
 		nextPlayer := board.oppPiece
 		if maximizingPlayer == board.oppPiece {
 			nextPlayer = board.playerPiece

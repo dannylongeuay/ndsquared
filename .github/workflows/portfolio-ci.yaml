@@ -6,7 +6,7 @@ on:
       - "apps/portfolio/**"
       - "helm/portfolio/**"
 jobs:
-  portfolio-diff:
+  portfolio-ci:
     name: Portfolio Diff
     runs-on: ubuntu-latest
     steps:

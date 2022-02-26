@@ -6,7 +6,7 @@ on:
       - "apps/api/**"
       - "helm/api/**"
 jobs:
-  api-diff:
+  api-ci:
     name: API Diff
     runs-on: ubuntu-latest
     steps:

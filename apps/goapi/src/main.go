@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"net/http"
 	"os"
@@ -44,7 +45,8 @@ func connectfourRoute(c *gin.Context) {
 	var json ConnectFourRequest
 	err := c.ShouldBindJSON(&json)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errResponse := ErrorReponse{err.Error()}
+		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
 	board := createBoard(json.Board, json.PlayerPiece, json.ComputerPiece, json.EmptyPiece)
@@ -60,7 +62,11 @@ func connectfourRoute(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
-	router.SetTrustedProxies(nil)
+	err := router.SetTrustedProxies(nil)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 	router.Use(cors.Default())
 
 	docs.SwaggerInfo.Host = os.Getenv("GOAPI_HOST")
@@ -78,4 +84,8 @@ func main() {
 	router.POST("/connectfour", connectfourRoute)
 
 	router.Run("0.0.0.0:5555")
+	// err = router.Run("0.0.0.0:5555")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
 }

@@ -6,7 +6,7 @@ on:
       - "apps/wedding/**"
       - "helm/wedding/**"
 jobs:
-  wedding-diff:
+  wedding-ci:
     name: Wedding Diff
     runs-on: ubuntu-latest
     steps:
