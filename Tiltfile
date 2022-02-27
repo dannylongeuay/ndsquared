@@ -47,11 +47,12 @@ docker_build(
   ],
 )
 
-compile_cmd = 'cd apps/goapi && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/goapi ndsquared/goapi/src && swag init -d src/ -ot go'
+compile_cmd = 'cd apps/goapi && make build'
 
 local_resource(
-  'goapi-compile',
+  'local-goapi-build',
   compile_cmd,
+  labels=["api"],
   deps=[
     './apps/goapi/src',
     './apps/goapi/go.mod',
@@ -59,7 +60,7 @@ local_resource(
   ],
 )
 
-docker_build(
+docker_build_with_restart(
   'goapi-app',
   './apps/goapi/',
   dockerfile='./apps/goapi/tilt.dockerfile',
@@ -156,6 +157,7 @@ k8s_resource(
   labels=["portfolio"],
   objects=[
     "local-portfolio:ingress",
+    "local-portfolio:configmap",
     "local-portfolio:externalsecret",
     "local-portfolio:secretstore",
   ],

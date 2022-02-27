@@ -6,6 +6,8 @@ import (
 )
 
 type Board struct {
+	height        int
+	width         int
 	cells         [][]string
 	computerPiece string
 	playerPiece   string
@@ -18,10 +20,12 @@ func createBoard(boardRows []string, computerPiece string, playerPiece string, e
 		playerPiece:   playerPiece,
 		emptyPiece:    emptyPiece,
 	}
-	b.cells = make([][]string, len(boardRows[0]))
+	b.cells = make([][]string, len(boardRows))
 	for i := range boardRows {
 		b.cells[i] = strings.Split(boardRows[i], "")
 	}
+	b.height = len(boardRows)
+	b.width = len(boardRows[0])
 	return b
 }
 
@@ -44,7 +48,7 @@ func (b *Board) dropPiece(piece string, col int) error {
 }
 
 func (b *Board) getValidMoves() []int {
-	validMoves := make([]int, 0, 9)
+	validMoves := make([]int, 0, b.width)
 	for i := range b.cells[0] {
 		_, err := b.getNextOpenRow(i)
 		if err != nil {
@@ -58,7 +62,7 @@ func (b *Board) getValidMoves() []int {
 func (b *Board) evaluate(piece string) int {
 	score := 0
 	// Center columns
-	centerCol := len(b.cells[0]) / 2
+	centerCol := b.width / 2
 	centerColWindow := b.getVerticalWindow(centerCol, 0, len(b.cells))
 	centerCount := windowCount(piece, centerColWindow)
 	score += centerCount * 3
@@ -162,6 +166,8 @@ func (b *Board) getDiagonalWindow(colStart int, rowStart int, direction int) []s
 
 func (b *Board) copyBoard() Board {
 	cb := Board{
+		height:        b.height,
+		width:         b.width,
 		computerPiece: b.computerPiece,
 		playerPiece:   b.playerPiece,
 		emptyPiece:    b.emptyPiece,

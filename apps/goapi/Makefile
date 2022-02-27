@@ -10,7 +10,6 @@ build: docs ## Build go binary
 
 .PHONY: docs
 docs: ## Generate Swagger docs
-	swag fmt -d src/
 	swag init -d src/ -ot go
 
 .PHONY: tests
@@ -24,6 +23,7 @@ lint: ## Run linter
 .PHONY: format
 format: ## Run formatter 
 	go fmt ndsquared/goapi/src
+	swag fmt -d src/
 
 .PHONY: cq
 cq: format tests lint ## Run code quality tools

@@ -14,9 +14,9 @@
 	const NEUTRUAL_COLOR = 'gray';
 	const MODE_ONE_PLAYER = '1 Player';
 	const MODE_TWO_PLAYER = '2 Players';
-	const DIFFICULTY_EASY = 3;
-	const DIFFICULTY_NORMAL = 4;
-	const DIFFICULTY_HARD = 5;
+	const DIFFICULTY_EASY = 4;
+	const DIFFICULTY_NORMAL = 5;
+	const DIFFICULTY_HARD = 6;
 	const GAME_PAUSED_MSGS = [
 		'I am plotting your defeat...',
 		'Please wait while the hamster wheel turns...',
@@ -109,6 +109,10 @@
 		board[y][x].fillColor = color;
 	}
 
+	function sleep(ms) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
+
 	async function handleTurn(x, y, color) {
 		if (gamePaused) return;
 		if (!isValidMove(x, y)) {
@@ -135,6 +139,9 @@
 
 		const gameBoard = getGameBoard(BOARD_WIDTH, BOARD_HEIGHT);
 		const payload = {
+			player_piece: 'X',
+			computer_piece: 'O',
+			empty_piece: '.',
 			board: gameBoard,
 			depth: difficulty
 		};
@@ -148,7 +155,7 @@
 			body: JSON.stringify(payload)
 		});
 		const data = await response.json();
-
+		await sleep(500);
 		color = OPPONENT_COLOR;
 
 		dropPiece(data.column, color);
