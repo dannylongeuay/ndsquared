@@ -51,5 +51,9 @@ jobs:
       - uses: Gr1N/setup-poetry@v7
         with:
           poetry-version: 1.1.11
+      - name: Install dependencies
+        run: poetry install
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
       - name: Run Code Quality Check
         run: make cq-check
