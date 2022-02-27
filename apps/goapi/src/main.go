@@ -19,8 +19,8 @@ type ErrorReponse struct {
 }
 
 type ConnectFourRequest struct {
-	ComputerPiece string   `json:"computer_piece" binding:"required" example:"X"`
-	OppPiece      string   `json:"opp_piece" binding:"required" example:"O"`
+	PlayerPiece   string   `json:"player_piece" binding:"required" example:"X"`
+	ComputerPiece string   `json:"computer_piece" binding:"required" example:"O"`
 	EmptyPiece    string   `json:"empty_piece" binding:"required" example:"."`
 	Depth         int      `json:"depth" binding:"required" example:"3"`
 	Board         []string `json:"board" binding:"required" example:".....,.....,.....,.....,..X.."`
@@ -49,8 +49,8 @@ func connectfourRoute(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	board := createBoard(json.Board, json.ComputerPiece, json.OppPiece, json.EmptyPiece)
-	value, col := minimax(board, json.Depth, math.MinInt, math.MaxInt, json.OppPiece)
+	board := createBoard(json.Board, json.ComputerPiece, json.PlayerPiece, json.EmptyPiece)
+	value, col := findBestMove(board, json.Depth, math.MinInt, math.MaxInt, json.ComputerPiece)
 	r := ConnectfourResponse{Column: col, Value: value}
 	c.JSON(http.StatusOK, r)
 }

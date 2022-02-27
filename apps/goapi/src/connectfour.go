@@ -8,14 +8,14 @@ import (
 type Board struct {
 	cells         [][]string
 	computerPiece string
-	oppPiece      string
+	playerPiece   string
 	emptyPiece    string
 }
 
-func createBoard(boardRows []string, computerPiece string, oppPiece string, emptyPiece string) Board {
+func createBoard(boardRows []string, computerPiece string, playerPiece string, emptyPiece string) Board {
 	b := Board{
 		computerPiece: computerPiece,
-		oppPiece:      oppPiece,
+		playerPiece:   playerPiece,
 		emptyPiece:    emptyPiece,
 	}
 	b.cells = make([][]string, len(boardRows[0]))
@@ -54,11 +54,6 @@ func (b *Board) getValidMoves() []int {
 	}
 	return validMoves
 }
-
-// func (b *Board) isFull() bool {
-// 	validMoves := b.getValidMoves()
-// 	return len(validMoves) == 0
-// }
 
 func (b *Board) evaluate(piece string) int {
 	score := 0
@@ -168,7 +163,7 @@ func (b *Board) getDiagonalWindow(colStart int, rowStart int, direction int) []s
 func (b *Board) copyBoard() Board {
 	cb := Board{
 		computerPiece: b.computerPiece,
-		oppPiece:      b.oppPiece,
+		playerPiece:   b.playerPiece,
 		emptyPiece:    b.emptyPiece,
 	}
 	cb.cells = make([][]string, len(b.cells))
@@ -192,9 +187,9 @@ func windowCount(piece string, window []string) int {
 
 func (b *Board) windowScore(piece string, window []string) int {
 	score := 0
-	oppPiece := b.computerPiece
+	playerPiece := b.computerPiece
 	if piece == b.computerPiece {
-		oppPiece = b.oppPiece
+		playerPiece = b.playerPiece
 	}
 	if windowCount(piece, window) == 4 {
 		score += 100
@@ -204,30 +199,8 @@ func (b *Board) windowScore(piece string, window []string) int {
 		score += 2
 	}
 
-	if windowCount(oppPiece, window) == 3 && windowCount(b.emptyPiece, window) == 1 {
+	if windowCount(playerPiece, window) == 3 && windowCount(b.emptyPiece, window) == 1 {
 		score -= 4
 	}
 	return score
 }
-
-// func (b *Board) pickBestMove(piece string) (int, error) {
-// 	bestScore := math.MinInt
-// 	bestCol := -1
-// 	for i := range b.cells[0] {
-// 		tmpBoard := b.copyBoard()
-// 		err := tmpBoard.dropPiece(piece, i)
-// 		if err != nil {
-// 			fmt.Println("tried to drop piece in invalid col")
-// 			continue
-// 		}
-// 		score := tmpBoard.evaluate(piece)
-// 		if score > bestScore {
-// 			bestScore = score
-// 			bestCol = i
-// 		}
-// 	}
-// 	if bestCol == -1 {
-// 		return -1, fmt.Errorf("no valid move could be found for piece %v", piece)
-// 	}
-// 	return bestCol, nil
-// }
