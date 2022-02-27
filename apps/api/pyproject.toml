@@ -10,10 +10,12 @@ fastapi = "^0.70.0"
 uvicorn = "^0.15.0"
 dramatiq = {extras = ["redis", "watch"], version = "^1.12.1"}
 fastapi-auth0 = "^0.3.0"
+requests = "^2.27.1"
 
 [tool.poetry.dev-dependencies]
-yapf = "^0.31.0"
-pylint = "^2.12.1"
+black = "^22.1.0"
+flake8 = "^4.0.1"
+pytest = "^7.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

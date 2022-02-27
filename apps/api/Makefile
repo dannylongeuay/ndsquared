@@ -11,4 +11,19 @@ shell: ## Install dependencies and activate poetry virtual environment
 
 .PHONY: run
 run: ## Run uvicorn web server
-	uvicorn app.main:app --host=0.0.0.0 --reload
+	API_ENVIRONMENT=development uvicorn app.main:app --host=0.0.0.0 --reload
+
+.PHONY: format
+format: ## Run formatter
+	black .
+
+.PHONY: lint
+lint: ## Run linter
+	flake8
+
+.PHONY: tests
+tests: ## Run tests
+	API_ENVIRONMENT=testing pytest
+
+.PHONY: cq
+cq: format lint tests ## Run code quality tools

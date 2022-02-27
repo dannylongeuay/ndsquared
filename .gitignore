@@ -8,6 +8,7 @@ tilt_modules
 .helm
 *.pyc
 __pycache__
+.pytest_cache
 secret.yaml
 sealedsecret.yaml
 gitlab-secret.yaml
