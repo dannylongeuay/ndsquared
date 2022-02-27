@@ -6,7 +6,7 @@ on:
       - "apps/api/**"
       - "helm/api/**"
 jobs:
-  api-ci:
+  api-diff:
     name: API Diff
     runs-on: ubuntu-latest
     steps:
@@ -37,3 +37,19 @@ jobs:
             ```
             ${{ env.COMMAND_OUTPUT }}
             ```
+  api-cq:
+    name: API Code Quality
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/api
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.1.11
+      - name: Run Code Quality Check
+        run: make cq-check

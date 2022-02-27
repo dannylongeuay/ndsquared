@@ -17,6 +17,10 @@ run: ## Run uvicorn web server
 format: ## Run formatter
 	black .
 
+.PHONY: format-check
+format-check: ## Run formating check
+	black --check .
+
 .PHONY: lint
 lint: ## Run linter
 	flake8
@@ -27,3 +31,6 @@ tests: ## Run tests
 
 .PHONY: cq
 cq: format lint tests ## Run code quality tools
+
+.PHONY: cq-check
+cq-check: format-check lint tests ## Run code quality check

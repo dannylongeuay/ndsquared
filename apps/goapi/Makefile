@@ -28,6 +28,9 @@ format: ## Run formatter
 .PHONY: cq
 cq: format tests lint ## Run code quality tools
 
+.PHONY: cq-check
+cq-check: lint tests ## Run code quality check
+
 .PHONY: run-prod
 run-prod: build ## Run prod binary
 	GIN_MODE=release ./build/goapi
