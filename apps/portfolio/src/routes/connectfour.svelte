@@ -14,9 +14,9 @@
 	const NEUTRUAL_COLOR = 'gray';
 	const MODE_ONE_PLAYER = '1 Player';
 	const MODE_TWO_PLAYER = '2 Players';
-	const DIFFICULTY_EASY = 3;
-	const DIFFICULTY_NORMAL = 4;
-	const DIFFICULTY_HARD = 5;
+	const DIFFICULTY_EASY = 4;
+	const DIFFICULTY_NORMAL = 5;
+	const DIFFICULTY_HARD = 6;
 	const GAME_PAUSED_MSGS = [
 		'I am plotting your defeat...',
 		'Please wait while the hamster wheel turns...',
@@ -75,17 +75,17 @@
 	function getGameBoard(xdim, ydim) {
 		let tempBoard = new Array(ydim);
 		for (let y = 0; y < ydim; y++) {
-			tempBoard[y] = new Array(xdim);
+			tempBoard[y] = '';
 			for (let x = 0; x < xdim; x++) {
 				switch (board[y][x].fillColor) {
 					case PLAYER_COLOR:
-						tempBoard[y][x] = 'X';
+						tempBoard[y] += 'X';
 						break;
 					case OPPONENT_COLOR:
-						tempBoard[y][x] = 'O';
+						tempBoard[y] += 'O';
 						break;
 					default:
-						tempBoard[y][x] = '.';
+						tempBoard[y] += '.';
 				}
 			}
 		}
@@ -107,6 +107,10 @@
 			return;
 		}
 		board[y][x].fillColor = color;
+	}
+
+	function sleep(ms) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
 	async function handleTurn(x, y, color) {
@@ -135,12 +139,15 @@
 
 		const gameBoard = getGameBoard(BOARD_WIDTH, BOARD_HEIGHT);
 		const payload = {
+			player_piece: 'X',
+			computer_piece: 'O',
+			empty_piece: '.',
 			board: gameBoard,
 			depth: difficulty
 		};
 		gamePaused = true;
 		gamePausedMsg = GAME_PAUSED_MSGS[Math.floor(Math.random() * GAME_PAUSED_MSGS.length)];
-		const connect_four_url = appSettings.API_BASE_URL + '/connectfour';
+		const connect_four_url = appSettings.GOAPI_BASE_URL + '/connectfour';
 		const headers = { 'content-type': 'application/json' };
 		const response = await fetch(connect_four_url, {
 			method: 'POST',
@@ -148,7 +155,7 @@
 			body: JSON.stringify(payload)
 		});
 		const data = await response.json();
-
+		await sleep(500);
 		color = OPPONENT_COLOR;
 
 		dropPiece(data.column, color);

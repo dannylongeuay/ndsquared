@@ -1,9 +1,8 @@
-enableFakeSecrets: false
 deployment:
   enableSecurityContext: true
   replicaCount: 1
   image:
-    repository: dannylongeuay/ndsq-portfolio
+    repository: dannylongeuay/ndsq-goapi
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
@@ -16,7 +15,7 @@ deployment:
         - ALL
     readOnlyRootFilesystem: true
     runAsNonRoot: true
-    runAsUser: 1000
+    runAsUser: 65534
   resources:
     limits:
       cpu: 1
@@ -35,15 +34,11 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: ndsquared.net
-      paths:
-        - path: /
-          pathType: Prefix
-    - host: www.ndsquared.net
+    - host: goapi.ndsquared.net
       paths:
         - path: /
           pathType: Prefix
 
 configmap:
-  apiBaseUrl: "https://api.ndsquared.net"
-  goapiBaseUrl: "https://goapi.ndsquared.net"
+  goapiHost: goapi.ndsquared.net
+  ginMode: release

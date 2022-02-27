@@ -34,7 +34,7 @@ clean: ## Destroy local development environment
 
 .PHONY: up
 up: bootstrap ## Run local development environment
-	tilt up --context k3d-$(PROJECT_NAME) --hud
+	tilt up --context k3d-$(PROJECT_NAME)
 
 .PHONY: down
 down: ## Stop local development environment
@@ -42,4 +42,4 @@ down: ## Stop local development environment
 
 .PHONY: gitlab-secret
 gitlab-secret: ## Create a gitlab secret to be used with the external secrets store
-	kubectl create secret generic gitlab-secret --namespace local --dry-run=client --from-literal="token=bar" -o yaml > gitlab-secret.yaml
+	cp gitlab-secret.example.yaml gitlab-secret.yaml

@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "portfolio.fullname" . }}
+  name: {{ include "goapi.fullname" . }}
   labels:
-    {{- include "portfolio.labels" . | nindent 4 }}
+    {{- include "goapi.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.deployment.replicaCount }}
   selector:
     matchLabels:
-      {{- include "portfolio.selectorLabels" . | nindent 6 }}
+      {{- include "goapi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.deployment.podAnnotations }}
@@ -16,7 +16,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "portfolio.selectorLabels" . | nindent 8 }}
+        {{- include "goapi.selectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.deployment.enableSecurityContext }}
       securityContext:
@@ -24,9 +24,6 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          args:
-            - "node"
-            - "build"
           {{- if .Values.deployment.enableSecurityContext }}
           securityContext:
             {{- toYaml .Values.deployment.securityContext | nindent 12 }}
@@ -34,21 +31,19 @@ spec:
           image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           envFrom:
-            - secretRef:
-                name: {{ include "portfolio.fullname" . }}
             - configMapRef:
-                name: {{ include "portfolio.fullname" . }}
+                name: {{ include "goapi.fullname" . }}
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: 5555
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /ping
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /ping
               port: http
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}

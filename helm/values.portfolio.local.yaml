@@ -1,5 +1,4 @@
 deployment:
-  apiBaseUrl: "http://api.localhost:8000"
   image:
     repository: portfolio-app
 ingress:
@@ -8,3 +7,6 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+configmap:
+  apiBaseUrl: "http://api.localhost:8000"
+  goapiBaseUrl: "http://goapi.localhost:8000"

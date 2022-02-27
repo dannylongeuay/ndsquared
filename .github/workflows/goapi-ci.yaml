@@ -1,13 +1,13 @@
-name: API CI
+name: GOAPI CI
 on:
   pull_request:
     paths:
-      - ".github/workflows/api-ci.yaml"
-      - "apps/api/**"
-      - "helm/api/**"
+      - ".github/workflows/goapi-ci.yaml"
+      - "apps/goapi/**"
+      - "helm/goapi/**"
 jobs:
-  api-diff:
-    name: API Diff
+  goapi-diff:
+    name: GOAPI Diff
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,36 +24,44 @@ jobs:
         name: Install helm diff plugin
       - name: Run helm diff
         run: |
-          COMMAND_OUTPUT=$(helm diff upgrade api helm/api/ --install --namespace ndsq --no-color)
+          COMMAND_OUTPUT=$(helm diff upgrade goapi helm/goapi/ --install --namespace ndsq --no-color)
           echo "COMMAND_OUTPUT<<EOF" >> $GITHUB_ENV
           echo "$COMMAND_OUTPUT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: api-diff
+          header: goapi-diff
           hide_and_recreate: true
           message: |
-            ## Helm `API` Diff:
+            ## Helm `GOAPI` Diff:
             ```
             ${{ env.COMMAND_OUTPUT }}
             ```
-  api-cq:
-    name: API Code Quality
+  goapi-tests:
+    name: GOAPI Tests
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./apps/api
+        working-directory: ./apps/goapi
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-go@v2
         with:
-          python-version: 3.9
-      - uses: Gr1N/setup-poetry@v7
+          go-version: "^1.17.2"
+      - name: Run Tests
+        run: |
+          go mod download
+          go test -v ndsquared/goapi/src
+  goapi-lint:
+    name: GOAPI Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
         with:
-          poetry-version: 1.1.11
-      - name: Install dependencies
-        run: poetry install
-        env:
-          POETRY_VIRTUALENVS_CREATE: false
-      - name: Run Code Quality Check
-        run: make cq-check
+          go-version: "^1.17.2"
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.44.2
+          working-directory: ./apps/goapi
