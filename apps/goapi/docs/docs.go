@@ -62,10 +62,10 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "board",
-                "computer_piece",
                 "depth",
                 "empty_piece",
-                "player_piece"
+                "opp_piece",
+                "computer_piece"
             ],
             "properties": {
                 "board": {
@@ -81,10 +81,6 @@ const docTemplate = `{
                         "..X.."
                     ]
                 },
-                "computer_piece": {
-                    "type": "string",
-                    "example": "O"
-                },
                 "depth": {
                     "type": "integer",
                     "example": 3
@@ -93,7 +89,11 @@ const docTemplate = `{
                     "type": "string",
                     "example": "."
                 },
-                "player_piece": {
+                "opp_piece": {
+                    "type": "string",
+                    "example": "O"
+                },
+                "computer_piece": {
                     "type": "string",
                     "example": "X"
                 }

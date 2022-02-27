@@ -18,7 +18,7 @@ RUN go mod verify
 
 COPY . .
 
-RUN go test -v ndsquared/goapi/src
+# Generate swagger docs
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN swag init -d src/ -ot go
 

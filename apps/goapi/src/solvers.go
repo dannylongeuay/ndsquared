@@ -28,21 +28,21 @@ import (
 // 	return bestCol, nil
 // }
 
-func minimax(board Board, depth int, alpha int, beta int, maximizingPlayer string) (int, int) {
+func minimax(board Board, depth int, alpha int, beta int, maximizingComputer string) (int, int) {
 	returnValue := math.MaxInt
-	if maximizingPlayer == board.playerPiece {
+	if maximizingComputer == board.computerPiece {
 		returnValue = math.MinInt
 	}
-	playerWon := board.winningMove(board.playerPiece)
+	computerWon := board.winningMove(board.computerPiece)
 	oppWon := board.winningMove(board.oppPiece)
 	validMoves := board.getValidMoves()
-	if depth == 0 || len(validMoves) == 0 || playerWon || oppWon {
-		if playerWon {
+	if depth == 0 || len(validMoves) == 0 || computerWon || oppWon {
+		if computerWon {
 			return math.MaxInt, -1
 		} else if oppWon {
 			return math.MinInt, -1
 		} else if depth == 0 {
-			return board.evaluate(board.playerPiece), -1
+			return board.evaluate(board.computerPiece), -1
 		} else {
 			return 0, -1
 		}
@@ -50,17 +50,17 @@ func minimax(board Board, depth int, alpha int, beta int, maximizingPlayer strin
 	returnCol := validMoves[rand.Intn(len(validMoves))]
 	for _, col := range validMoves {
 		newBoard := board.copyBoard()
-		err := newBoard.dropPiece(maximizingPlayer, col)
+		err := newBoard.dropPiece(maximizingComputer, col)
 		if err != nil {
 			fmt.Println(err.Error())
 			return -1, -1
 		}
-		nextPlayer := board.oppPiece
-		if maximizingPlayer == board.oppPiece {
-			nextPlayer = board.playerPiece
+		nextComputer := board.oppPiece
+		if maximizingComputer == board.oppPiece {
+			nextComputer = board.computerPiece
 		}
-		value, _ := minimax(newBoard, depth-1, alpha, beta, nextPlayer)
-		if maximizingPlayer == board.playerPiece {
+		value, _ := minimax(newBoard, depth-1, alpha, beta, nextComputer)
+		if maximizingComputer == board.computerPiece {
 			if value > returnValue {
 				returnValue = value
 				returnCol = col

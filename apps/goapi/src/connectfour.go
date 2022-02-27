@@ -6,17 +6,17 @@ import (
 )
 
 type Board struct {
-	cells       [][]string
-	playerPiece string
-	oppPiece    string
-	emptyPiece  string
+	cells         [][]string
+	computerPiece string
+	oppPiece      string
+	emptyPiece    string
 }
 
-func createBoard(boardRows []string, playerPiece string, oppPiece string, emptyPiece string) Board {
+func createBoard(boardRows []string, computerPiece string, oppPiece string, emptyPiece string) Board {
 	b := Board{
-		playerPiece: playerPiece,
-		oppPiece:    oppPiece,
-		emptyPiece:  emptyPiece,
+		computerPiece: computerPiece,
+		oppPiece:      oppPiece,
+		emptyPiece:    emptyPiece,
 	}
 	b.cells = make([][]string, len(boardRows[0]))
 	for i := range boardRows {
@@ -24,12 +24,6 @@ func createBoard(boardRows []string, playerPiece string, oppPiece string, emptyP
 	}
 	return b
 }
-
-// func (b *Board) printBoard() {
-// 	for row := range b.cells {
-// 		fmt.Println(b.cells[row])
-// 	}
-// }
 
 func (b *Board) getNextOpenRow(col int) (int, error) {
 	for i := len(b.cells) - 1; i >= 0; i-- {
@@ -69,8 +63,9 @@ func (b *Board) getValidMoves() []int {
 func (b *Board) evaluate(piece string) int {
 	score := 0
 	// Center columns
-	centerCol := b.getVerticalWindow(4, 0, len(b.cells))
-	centerCount := windowCount(piece, centerCol)
+	centerCol := len(b.cells[0]) / 2
+	centerColWindow := b.getVerticalWindow(centerCol, 0, len(b.cells))
+	centerCount := windowCount(piece, centerColWindow)
 	score += centerCount * 3
 
 	// Horizontal
@@ -172,9 +167,9 @@ func (b *Board) getDiagonalWindow(colStart int, rowStart int, direction int) []s
 
 func (b *Board) copyBoard() Board {
 	cb := Board{
-		playerPiece: b.playerPiece,
-		oppPiece:    b.oppPiece,
-		emptyPiece:  b.emptyPiece,
+		computerPiece: b.computerPiece,
+		oppPiece:      b.oppPiece,
+		emptyPiece:    b.emptyPiece,
 	}
 	cb.cells = make([][]string, len(b.cells))
 	for i, row := range b.cells {
@@ -197,8 +192,8 @@ func windowCount(piece string, window []string) int {
 
 func (b *Board) windowScore(piece string, window []string) int {
 	score := 0
-	oppPiece := b.playerPiece
-	if piece == b.playerPiece {
+	oppPiece := b.computerPiece
+	if piece == b.computerPiece {
 		oppPiece = b.oppPiece
 	}
 	if windowCount(piece, window) == 4 {
