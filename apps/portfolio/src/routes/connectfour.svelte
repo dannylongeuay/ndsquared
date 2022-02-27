@@ -75,17 +75,17 @@
 	function getGameBoard(xdim, ydim) {
 		let tempBoard = new Array(ydim);
 		for (let y = 0; y < ydim; y++) {
-			tempBoard[y] = new Array(xdim);
+			tempBoard[y] = '';
 			for (let x = 0; x < xdim; x++) {
 				switch (board[y][x].fillColor) {
 					case PLAYER_COLOR:
-						tempBoard[y][x] = 'X';
+						tempBoard[y] += 'X';
 						break;
 					case OPPONENT_COLOR:
-						tempBoard[y][x] = 'O';
+						tempBoard[y] += 'O';
 						break;
 					default:
-						tempBoard[y][x] = '.';
+						tempBoard[y] += '.';
 				}
 			}
 		}
@@ -140,7 +140,7 @@
 		};
 		gamePaused = true;
 		gamePausedMsg = GAME_PAUSED_MSGS[Math.floor(Math.random() * GAME_PAUSED_MSGS.length)];
-		const connect_four_url = appSettings.API_BASE_URL + '/connectfour';
+		const connect_four_url = appSettings.GOAPI_BASE_URL + '/connectfour';
 		const headers = { 'content-type': 'application/json' };
 		const response = await fetch(connect_four_url, {
 			method: 'POST',

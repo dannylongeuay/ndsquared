@@ -1,6 +1,5 @@
 enableFakeSecrets: false
 deployment:
-  apiBaseUrl: "https://api.ndsquared.net"
   enableSecurityContext: true
   replicaCount: 1
   image:
@@ -44,3 +43,7 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+
+configmap:
+  apiBaseUrl: "https://api.ndsquared.net"
+  goapiBaseUrl: "https://goapi.ndsquared.net"
