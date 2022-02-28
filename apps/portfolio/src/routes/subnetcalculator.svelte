@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
@@ -31,11 +31,10 @@
 	});
 
 	const baseBreakdownUrl = () => {
-		const host = pageData.host;
 		const path = pageData.path;
 		const { octets, prefix } = parseCidr(cidr);
 		const network = octets.join('.');
-		return `${host}${path}?network=${network}&mask=${prefix}&breakdown=`;
+		return `${path}?network=${network}&mask=${prefix}&breakdown=`;
 	};
 
 	const calc = () => {
