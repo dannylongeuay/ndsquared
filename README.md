@@ -6,7 +6,7 @@ This repo contains the collection of application code and corresponding helm cha
 
 - [Portfolio](https://www.ndsquared.net)
   - [Python Backend](https://api.ndsquared.net/docs)
-  - TODO: Golang Backend
+  - [Golang Backend](https://goapi.ndsquared.net/docs)
 - [Wedding Gallery](https://wedding.ndsquared.net)
 
 ## Deployment
@@ -23,7 +23,7 @@ flowchart TB
     subgraph Portfolio
       Frontend1[Javascript Frontend]-->PyAPI[Python Backend]
       PyAPI<-->Redis
-      Frontend1-->GoAPI[TODO: Golang Backend]
+      Frontend1-->GoAPI[Golang Backend]
     end
     subgraph Wedding Gallery
       Frontend2[Javascript Frontend]
