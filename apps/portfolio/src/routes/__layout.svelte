@@ -16,7 +16,7 @@
 	}
 </script>
 
-<script>
+<script lang="ts">
 	import '../app.css';
 	import '../app.css';
 	import NavLinks from '$lib/common/navLinks.svelte';
@@ -41,7 +41,7 @@
 
 <aside
 	class:translate-x-full={mobileMenuOpen}
-	class="absolute z-10 w-full h-full transition duration-500 ease-in-out transform bg-neutral-focus -left-full"
+	class="absolute z-40 w-full h-full transition duration-500 ease-in-out transform bg-neutral-focus -left-full"
 	on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
 >
 	<div class="flex flex-col text-xl text-neutral-content">
@@ -52,7 +52,7 @@
 <nav class="navbar bg-neutral text-neutral-content">
 	<div class="flex-none">
 		<button
-			class="z-20 btn btn-square btn-ghost lg:hidden"
+			class="z-50 btn btn-square btn-ghost lg:hidden"
 			on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
 		>
 			<svg
@@ -87,7 +87,7 @@
 <main class="min-h-screen">
 	<slot />
 </main>
-<footer class="flex justify-center w-full p-12 bg-neutral">
+<footer class="flex justify-center w-full px-12 py-32 bg-neutral">
 	<span class="text-xl text-neutral-content">
 		Copyright &copy; 2021 NDSquared. All Rights Reserved
 	</span>

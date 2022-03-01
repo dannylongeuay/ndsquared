@@ -277,11 +277,11 @@
 		</div>
 	</div>
 	{#if errorMsg}
-		<h1 class="bg-base-300 text-secondary text-xl text-center p-4">{errorMsg}</h1>
+		<h1 class="p-4 text-xl text-center bg-base-300 text-secondary">{errorMsg}</h1>
 	{:else}
 		<div class="m-4 text-center"><a href={breakdownUrl} target="_blank">Bookmark URL</a></div>
 		<div class="overflow-x-auto">
-			<table class="table w-full z-0">
+			<table class="z-0 table w-full">
 				<thead>
 					<tr>
 						<th />

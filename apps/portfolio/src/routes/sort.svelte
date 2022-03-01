@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { flip } from 'svelte/animate';
 
 	const primaryBorderColorClass = 'border-yellow-300';
