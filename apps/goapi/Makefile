@@ -18,7 +18,7 @@ tests: ## Run tests
 
 .PHONY: lint
 lint: ## Run linter
-	golangci-lint run
+	golangci-lint run --fast
 
 .PHONY: format
 format: ## Run formatter 
