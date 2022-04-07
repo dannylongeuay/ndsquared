@@ -93,6 +93,7 @@ func (suite *BoardSuite) TestGetNextOpenRow() {
 	suite.Nil(err)
 	suite.Equal(3, row)
 }
+
 func (suite *BoardSuite) TestDropPiece() {
 	err := suite.fullBoard.dropPiece(suite.computerPiece, 0)
 	suite.Errorf(err, "no open row found on column 0")
