@@ -1,5 +1,4 @@
 import pytest
-
 from dramatiq import Worker
 from fastapi.testclient import TestClient
 

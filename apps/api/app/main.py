@@ -1,19 +1,18 @@
-import dramatiq
 import logging
 import time
-
-
-from enum import Enum
 from asyncio import sleep
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, BaseSettings
+from enum import Enum
+
+import dramatiq
 from dramatiq import Worker
 from dramatiq.brokers.redis import RedisBroker
 from dramatiq.brokers.stub import StubBroker
-from dramatiq.results.backends import RedisBackend, StubBackend
 from dramatiq.results import Results
+from dramatiq.results.backends import RedisBackend, StubBackend
 from dramatiq.results.errors import ResultMissing
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, BaseSettings
 
 
 class Environment(Enum):
